@@ -21,7 +21,7 @@ const Track: React.FC<TrackProps> = ({ model, className }) => {
         dispatch(
           generateMp3Url({
             title: model.title,
-            artist: model.title,
+            artist: model.artist.name,
             trackId: model.id,
           })
         );
