@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TrackModel } from "../commonTypes/modelTypes";
+import { TrackModel } from "../commonTypes/deezerTypes";
 import { RootState } from "../app/store";
 
 export interface LikedState {

@@ -1,4 +1,8 @@
-import { AlbumModel, ArtistModel, TrackModel } from "../commonTypes/modelTypes";
+import {
+  AlbumModel,
+  ArtistModel,
+  TrackModel,
+} from "../commonTypes/deezerTypes";
 
 export const parseTrack = (trackFromApi: any): TrackModel => {
   const artist: ArtistModel = {

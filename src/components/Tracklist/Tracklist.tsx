@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import React from "react";
-import { TrackModel } from "../../commonTypes/modelTypes";
+import { TrackModel } from "../../commonTypes/deezerTypes";
 import Track from "../Track/Track";
 import style from "./tracklist.module.sass";
 
