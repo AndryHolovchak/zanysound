@@ -1,5 +1,5 @@
 export interface ArtistModel {
-  id: number;
+  id: string;
   name: string;
   picture: string;
   smallPicture: string;
@@ -9,7 +9,7 @@ export interface ArtistModel {
 }
 
 export interface AlbumModel {
-  id: number;
+  id: string;
   title: string;
   cover: string;
   smallCover: stinrg;
@@ -19,7 +19,7 @@ export interface AlbumModel {
 }
 
 export interface TrackModel {
-  id: number;
+  id: string;
   title: string;
   shortTitle: string;
   rank: number;
@@ -30,7 +30,7 @@ export interface TrackModel {
 }
 
 export interface PlaylistModel {
-  id: number;
+  id: string;
   title: string;
   creatorId: number;
   creationDate: Date;

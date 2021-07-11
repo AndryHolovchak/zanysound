@@ -13,6 +13,7 @@ import appSlice from "../slices/appSlice";
 import searchSlice from "../slices/searchSlice";
 import rootSaga from "../sagas/rootSaga";
 import userSlice from "../slices/userSlice";
+import mp3Slice from "./../slices/mp3Slice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -22,6 +23,7 @@ export const store = createStore(
     deezer: deezerSlice,
     search: searchSlice,
     user: userSlice,
+    mp3: mp3Slice,
   }),
   compose(
     applyMiddleware(sagaMiddleware),

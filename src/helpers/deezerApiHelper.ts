@@ -32,7 +32,7 @@ export const getUserPlaylists = async () => {
   return response.data;
 };
 
-export const getPlaylistTracks = async (id: number) => {
+export const getPlaylistTracks = async (id: string) => {
   let response: any = await deezerApiRequest(`/playlist/${id}`);
   return response.tracks.data;
 };

@@ -7,7 +7,7 @@ import {
 
 export const parseTrack = (trackFromApi: any): TrackModel => {
   const artist: ArtistModel = {
-    id: trackFromApi.artist.id,
+    id: trackFromApi.artist.id.toString(),
     name: trackFromApi.artist.name,
     picture: trackFromApi.artist.picture,
     xlPicture: trackFromApi.artist.picture_xl,
@@ -17,7 +17,7 @@ export const parseTrack = (trackFromApi: any): TrackModel => {
   };
 
   const album: AlbumModel = {
-    id: trackFromApi.album.id,
+    id: trackFromApi.album.id.toString(),
     title: trackFromApi.album.title,
     cover: trackFromApi.album.cover,
     xlCover: trackFromApi.album.cover_xl,
@@ -42,7 +42,7 @@ export const parseTrack = (trackFromApi: any): TrackModel => {
 
 export const parsePlaylist = (playlistFromApi: any): PlaylistModel => {
   return {
-    id: playlistFromApi.id,
+    id: playlistFromApi.id.toString(),
     title: playlistFromApi.title,
     creatorId: playlistFromApi.creator.id,
     creationDate: new Date(playlistFromApi.creation_date),
