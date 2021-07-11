@@ -1,6 +1,7 @@
 import {
   AlbumModel,
   ArtistModel,
+  PlaylistModel,
   TrackModel,
 } from "../commonTypes/deezerTypes";
 
@@ -36,5 +37,20 @@ export const parseTrack = (trackFromApi: any): TrackModel => {
     duration: trackFromApi.duration,
     shortTitle: trackFromApi.title_short,
     explicitLyrics: trackFromApi.explicit_lyrics,
+  };
+};
+
+export const parsePlaylist = (playlistFromApi: any): PlaylistModel => {
+  return {
+    id: playlistFromApi.id,
+    title: playlistFromApi.title,
+    creatorId: playlistFromApi.creator.id,
+    creationDate: new Date(playlistFromApi.creation_date),
+    isLikedTracks: playlistFromApi.is_loved_track,
+    picture: playlistFromApi.picture,
+    smallPicture: playlistFromApi.picture_small,
+    mediumPicture: playlistFromApi.picture_medium,
+    bitPicture: playlistFromApi.picture_big,
+    xlPicture: playlistFromApi.picture_xl,
   };
 };
