@@ -15,6 +15,7 @@ import {
 } from "./slices/deezerSlice";
 import { DeezerSignInStatus } from "./commonDefinitions/deezerCommonDefinitions";
 import Button from "./components/Button/Button";
+import SearchScreen from "./screens/searchScreen/SearchScreen";
 
 function App() {
   const dispatch = useAppDispatch();
