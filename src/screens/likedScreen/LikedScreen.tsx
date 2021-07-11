@@ -1,5 +1,4 @@
 import React from "react";
-import LazyLoad from "react-lazyload";
 import { useAppSelector } from "../../app/hooks";
 import ScreenContainer from "../../components/ScreenContainer/ScreenContainer";
 import Track from "../../components/Track/Track";
