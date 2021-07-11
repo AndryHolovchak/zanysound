@@ -55,6 +55,9 @@ function App() {
           <Route exact path="/liked">
             <LikedScreen />
           </Route>
+          <Route exact path="/search">
+            <SearchScreen />
+          </Route>
         </Switch>
       </BrowserRouter>
       {(signInStatus === DeezerSignInStatus.FailedByLocal ||
