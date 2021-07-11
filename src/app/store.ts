@@ -1,13 +1,31 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import appSlice from "../appSlice";
-import counterReducer from "../features/counter/counterSlice";
+import deezerSlice from "./../slices/deezerSlice";
+import {
+  configureStore,
+  createStore,
+  applyMiddleware,
+  ThunkAction,
+  Action,
+  combineReducers,
+  compose,
+} from "@reduxjs/toolkit";
+import createSagaMiddleware from "redux-saga";
+import appSlice from "../slices/appSlice";
+import rootSaga from "../sagas/rootSaga";
 
-export const store = configureStore({
-  reducer: {
-    counter: counterReducer,
+const sagaMiddleware = createSagaMiddleware();
+
+export const store = createStore(
+  combineReducers({
     app: appSlice,
-  },
-});
+    deezer: deezerSlice,
+  }),
+  compose(
+    applyMiddleware(sagaMiddleware),
+    //@ts-ignore
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  )
+);
+sagaMiddleware.run(rootSaga);
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>;

@@ -3,11 +3,18 @@ import "./App.sass";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LikedScreen from "./screens/LikedScreen/LikedScreen";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { changeIsMobileEnv, selectIsMobileEnv } from "./appSlice";
+import {
+  selectDeezerIsInitialized,
+  selectDeezerSignInStatus,
+} from "./slices/deezerSlice";
+import { DeezerSignInStatus } from "./commonDefinitions/deezerCommonDefinitions";
+import Button from "./components/Button/Button";
 
 function App() {
-  const isMobile = useAppSelector(selectIsMobileEnv);
   const dispatch = useAppDispatch();
+  const isMobile = useAppSelector(selectIsMobileEnv);
+  const signInStatus = useAppSelector(selectDeezerSignInStatus);
+  const deezerIsInitialized = useAppSelector(selectDeezerIsInitialized);
 
   const handleWindowResize = useCallback(() => {
     const windowWidth = window.innerWidth;
@@ -26,6 +33,21 @@ function App() {
     dispatch(changeIsMobileEnv(window.innerWidth < 1024));
   }, [dispatch]);
 
+  //init deezer
+  useEffect(() => {
+    dispatch(initializeDeezer({ dispatch }));
+  }, [dispatch]);
+
+  //sign in using local data
+  useEffect(() => {
+    if (
+      deezerIsInitialized &&
+      signInStatus === DeezerSignInStatus.NotSignedIn
+    ) {
+      dispatch(singInByLocalData());
+    }
+  }, [dispatch, signInStatus, deezerIsInitialized]);
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -35,6 +57,14 @@ function App() {
           </Route>
         </Switch>
       </BrowserRouter>
+      {(signInStatus === DeezerSignInStatus.FailedByLocal ||
+        signInStatus === DeezerSignInStatus.FailedByRedirect) && (
+        <Button
+          title="Sign in by Deezer"
+          className={"App__sign_in_button"}
+          onCLick={() => dispatch(signInByRedirect({ dispatch }))}
+        />
+      )}
     </div>
   );
 }
