@@ -1,8 +1,14 @@
 import React, { useCallback, useEffect } from "react";
 import "./App.sass";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import LikedScreen from "./screens/LikedScreen/LikedScreen";
+import LikedScreen from "./screens/likedScreen/LikedScreen";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
+import { changeIsMobileEnv, selectIsMobileEnv } from "./slices/appSlice";
+import {
+  initializeDeezer,
+  signInByRedirect,
+  singInByLocalData,
+} from "./sagas/deezerSaga";
 import {
   selectDeezerIsInitialized,
   selectDeezerSignInStatus,
@@ -19,18 +25,20 @@ function App() {
   const handleWindowResize = useCallback(() => {
     const windowWidth = window.innerWidth;
 
-    if (+(windowWidth < 1024) ^ +isMobile) {
+    if (+(windowWidth <= 1024) ^ +isMobile) {
       dispatch(changeIsMobileEnv(!isMobile));
     }
   }, [isMobile, dispatch]);
 
+  //update isMobile value on resize
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);
     return () => window.removeEventListener("resize", handleWindowResize);
   }, [handleWindowResize]);
 
+  //isMobile init value
   useEffect(() => {
-    dispatch(changeIsMobileEnv(window.innerWidth < 1024));
+    dispatch(changeIsMobileEnv(window.innerWidth <= 1024));
   }, [dispatch]);
 
   //init deezer

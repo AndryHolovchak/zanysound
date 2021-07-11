@@ -1,3 +1,4 @@
+import likedSlice from "./../slices/likedSlice";
 import deezerSlice from "./../slices/deezerSlice";
 import {
   configureStore,
@@ -18,6 +19,7 @@ export const store = createStore(
   combineReducers({
     app: appSlice,
     deezer: deezerSlice,
+    liked: likedSlice,
   }),
   compose(
     applyMiddleware(sagaMiddleware),
@@ -25,6 +27,7 @@ export const store = createStore(
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   )
 );
+
 sagaMiddleware.run(rootSaga);
 
 export type AppDispatch = typeof store.dispatch;
