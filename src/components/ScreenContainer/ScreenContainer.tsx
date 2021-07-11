@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectIsMobileEnv } from "../../appSlice";
+import { selectIsMobileEnv } from "../../slices/appSlice";
 
 import DesktopMenu from "../Menu/desktop/DesktopMenu";
 import MobileMenu from "../Menu/mobile/MobileMenu";
