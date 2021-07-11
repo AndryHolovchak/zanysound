@@ -28,3 +28,16 @@ export interface TrackModel {
   album: AlbumModel;
   artist: ArtistModel;
 }
+
+export interface PlaylistModel {
+  id: number;
+  title: string;
+  creatorId: number;
+  creationDate: Date;
+  isLikedTracks: boolean;
+  picture: string;
+  smallPicture: string;
+  mediumPicture: string;
+  bitPicture: string;
+  xlPicture: string;
+}

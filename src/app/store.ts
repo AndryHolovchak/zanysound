@@ -1,4 +1,3 @@
-import likedSlice from "./../slices/likedSlice";
 import deezerSlice from "./../slices/deezerSlice";
 import {
   configureStore,
@@ -13,6 +12,7 @@ import createSagaMiddleware from "redux-saga";
 import appSlice from "../slices/appSlice";
 import searchSlice from "../slices/searchSlice";
 import rootSaga from "../sagas/rootSaga";
+import userSlice from "../slices/userSlice";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -20,8 +20,8 @@ export const store = createStore(
   combineReducers({
     app: appSlice,
     deezer: deezerSlice,
-    liked: likedSlice,
     search: searchSlice,
+    user: userSlice,
   }),
   compose(
     applyMiddleware(sagaMiddleware),

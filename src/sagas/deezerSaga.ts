@@ -56,7 +56,6 @@ export function initializeDeezerWatcher({ payload }: InitializeDeezer) {
 
   //@ts-ignore
   window.dzAsyncInit = async function () {
-    console.log("Init");
     //@ts-ignore
     await DZ.init({
       appId: config.DEEZER_APP_ID,

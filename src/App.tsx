@@ -16,6 +16,7 @@ import {
 import { DeezerSignInStatus } from "./commonDefinitions/deezerCommonDefinitions";
 import Button from "./components/Button/Button";
 import SearchScreen from "./screens/searchScreen/SearchScreen";
+import { loadBasicUserInfo } from "./sagas/userSaga";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -56,6 +57,13 @@ function App() {
       dispatch(singInByLocalData());
     }
   }, [dispatch, signInStatus, deezerIsInitialized]);
+
+  //load user info
+  useEffect(() => {
+    if (signInStatus === DeezerSignInStatus.SignedIn) {
+      dispatch(loadBasicUserInfo());
+    }
+  }, [signInStatus, dispatch]);
 
   return (
     <div className="App">
