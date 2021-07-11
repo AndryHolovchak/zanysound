@@ -10,7 +10,6 @@ export interface TrackProps {
 
 const Track: React.FC<TrackProps> = ({ model, className }) => {
   const finalClassName = classNames([style.track, className]);
-
   return (
     <div className={finalClassName}>
       <img alt="cover" src={model.album.cover} className={style.track__cover} />
