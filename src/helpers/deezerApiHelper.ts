@@ -22,6 +22,21 @@ export const deezerApiRequest = async (
   return promise;
 };
 
+export const getUserInfo = async () => {
+  let response = await deezerApiRequest("/user/me");
+  return response;
+};
+
+export const getUserPlaylists = async () => {
+  let response: any = await deezerApiRequest("/user/me/playlists");
+  return response.data;
+};
+
+export const getPlaylistTracks = async (id: number) => {
+  let response: any = await deezerApiRequest(`/playlist/${id}`);
+  return response.tracks.data;
+};
+
 export const searchTrackApiCall = async (query: string, index: number = 0) => {
   let encodedQueyr = encodeURIComponent(query);
   let response: any = await deezerApiRequest(

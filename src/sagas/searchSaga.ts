@@ -1,4 +1,4 @@
-import { parseTrack } from "./../helpers/trackHelper";
+import { parseTrack } from "../helpers/deezerDataHelper";
 import { put, takeLatest } from "redux-saga/effects";
 import { searchTrackApiCall } from "../helpers/deezerApiHelper";
 import { changeSearchResult } from "../slices/searchSlice";

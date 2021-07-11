@@ -1,4 +1,4 @@
-import { TrackModel } from "./../commonTypes/modelTypes.d";
+import { TrackModel } from "../commonTypes/deezerTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 
