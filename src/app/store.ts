@@ -11,6 +11,7 @@ import {
 } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
 import appSlice from "../slices/appSlice";
+import searchSlice from "../slices/searchSlice";
 import rootSaga from "../sagas/rootSaga";
 
 const sagaMiddleware = createSagaMiddleware();
@@ -20,6 +21,7 @@ export const store = createStore(
     app: appSlice,
     deezer: deezerSlice,
     liked: likedSlice,
+    search: searchSlice,
   }),
   compose(
     applyMiddleware(sagaMiddleware),
