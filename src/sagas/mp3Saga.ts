@@ -2,7 +2,7 @@ import { Mp3Url } from "./../commonTypes/miscTypes.d";
 import { put, takeLatest } from "redux-saga/effects";
 import config from "../config/config";
 import { object2queryParams } from "../utils/urlUtils";
-import { changeMp3Urls, setMp3Url } from "../slices/mp3Slice";
+import { setMp3Url } from "../slices/mp3Slice";
 
 export const GENERATE_MP3_URL = "mp3/generate/url";
 
