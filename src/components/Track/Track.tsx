@@ -8,25 +8,15 @@ import style from "./track.module.sass";
 export interface TrackProps {
   model: TrackModel;
   className?: string;
+  onClick?: () => void;
 }
 
-const Track: React.FC<TrackProps> = ({ model, className }) => {
+const Track: React.FC<TrackProps> = ({ model, className, onClick }) => {
   const dispatch = useAppDispatch();
   const finalClassName = classNames([style.track, className]);
 
   return (
-    <div
-      className={finalClassName}
-      onClick={() => {
-        dispatch(
-          generateMp3Url({
-            title: model.title,
-            artist: model.artist.name,
-            trackId: model.id,
-          })
-        );
-      }}
-    >
+    <div className={finalClassName} onClick={onClick}>
       <img alt="cover" src={model.album.cover} className={style.track__cover} />
       <div className={style.track__main_info}>
         <span className={style.track__title}>{model.title}</span>

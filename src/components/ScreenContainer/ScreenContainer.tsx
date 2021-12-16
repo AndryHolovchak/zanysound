@@ -4,6 +4,7 @@ import { selectIsMobileEnv } from "../../slices/appSlice";
 
 import DesktopMenu from "../Menu/desktop/DesktopMenu";
 import MobileMenu from "../Menu/mobile/MobileMenu";
+import { Player } from "../Player/Player";
 
 import style from "./screenContainer.module.sass";
 
@@ -11,10 +12,7 @@ export interface ScreenContainerProps {
   withMenu?: boolean;
 }
 
-const ScreenContainer: React.FC<ScreenContainerProps> = ({
-  children,
-  withMenu = true,
-}) => {
+const ScreenContainer: React.FC<ScreenContainerProps> = ({ children, withMenu = true }) => {
   const isMobile = useAppSelector(selectIsMobileEnv);
 
   return (
@@ -28,6 +26,7 @@ const ScreenContainer: React.FC<ScreenContainerProps> = ({
         <div className={style.screen_container__screen}>{children}</div>
         {withMenu && isMobile && (
           <div className={style.screen_container__mobile_menu_container}>
+            <Player />
             <MobileMenu />
           </div>
         )}
