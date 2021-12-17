@@ -2,10 +2,7 @@ import { AnyAction, Dispatch } from "@reduxjs/toolkit";
 import { all, delay, put, takeLatest } from "redux-saga/effects";
 import { DeezerSignInStatus } from "../commonDefinitions/deezerCommonDefinitions";
 import config from "../config/config";
-import {
-  changeDeezerIsInitialized,
-  changeDeezerSignInStatus,
-} from "../slices/deezerSlice";
+import { changeDeezerIsInitialized, changeDeezerSignInStatus } from "../slices/deezerSlice";
 
 export const INITIALIZE_DEEZER = "deezer/initialize";
 export const SIGN_IN_BY_LOCAL_DATA = "deezer/signInBy/localData";
@@ -33,9 +30,7 @@ export interface SignInByRedirect {
   payload: SignInByRedirectPayload;
 }
 
-export const initializeDeezer = (
-  payload: InitializeDeezerPayload
-): InitializeDeezer => ({
+export const initializeDeezer = (payload: InitializeDeezerPayload): InitializeDeezer => ({
   type: INITIALIZE_DEEZER,
   payload,
 });
@@ -44,9 +39,7 @@ export const singInByLocalData = (): SignInByLocalData => ({
   type: SIGN_IN_BY_LOCAL_DATA,
 });
 
-export const signInByRedirect = (
-  payload: SignInByRedirectPayload
-): SignInByRedirect => ({
+export const signInByRedirect = (payload: SignInByRedirectPayload): SignInByRedirect => ({
   type: SIGN_IN_BY_REDIRECT,
   payload,
 });
@@ -72,9 +65,7 @@ export function initializeDeezerWatcher({ payload }: InitializeDeezer) {
 }
 
 export function* signInByLocalDataWatcher() {
-  let tokenFromStorage = window.localStorage.getItem(
-    config.DEEZER_TOKEN_STORAGE_KEY
-  );
+  let tokenFromStorage = window.localStorage.getItem(config.DEEZER_TOKEN_STORAGE_KEY);
 
   //@ts-ignore
   DZ.token = tokenFromStorage === "null" ? null : tokenFromStorage;
@@ -101,15 +92,12 @@ export function signInByRedirectWatcher({ payload }: SignInByRedirect) {
       dispatch(
         changeDeezerSignInStatus(
           //@ts-ignore
-          !!DZ.token
-            ? DeezerSignInStatus.SignedIn
-            : DeezerSignInStatus.FailedByRedirect
+          !!DZ.token ? DeezerSignInStatus.SignedIn : DeezerSignInStatus.FailedByRedirect
         )
       );
     },
     {
-      perms:
-        "basic_access,email,manage_community,manage_library,delete_library,offline_access",
+      perms: "basic_access,email,manage_community,manage_library,delete_library,offline_access",
     }
   );
 }

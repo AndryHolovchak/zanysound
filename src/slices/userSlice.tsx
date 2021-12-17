@@ -5,11 +5,13 @@ import { PlaylistModel, TrackModel } from "../commonTypes/deezerTypes";
 export interface UserState {
   playlists: PlaylistModel[];
   likedTracks: TrackModel[];
+  likedTracksIds: string[];
 }
 
 const initialState: UserState = {
   playlists: [],
   likedTracks: [],
+  likedTracksIds: [],
 };
 
 export const userSlice = createSlice({
@@ -22,12 +24,16 @@ export const userSlice = createSlice({
     changeLikedTracks: (state, action: PayloadAction<TrackModel[]>) => {
       state.likedTracks = action.payload;
     },
+    changeLikedTracksIds: (state, action: PayloadAction<string[]>) => {
+      state.likedTracksIds = [...action.payload];
+    },
   },
 });
 
-export const { changeUserPlaylists, changeLikedTracks } = userSlice.actions;
+export const { changeUserPlaylists, changeLikedTracks, changeLikedTracksIds } = userSlice.actions;
 
 export const selectUserPlaylists = (state: RootState) => state.user.playlists;
 export const selectLikedTracks = (state: RootState) => state.user.likedTracks;
+export const selectLikedTracksIds = (state: RootState) => state.user.likedTracksIds;
 
 export default userSlice.reducer;

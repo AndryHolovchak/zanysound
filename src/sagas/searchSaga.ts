@@ -2,6 +2,7 @@ import { parseTrack } from "../helpers/deezerDataHelper";
 import { put, takeLatest } from "redux-saga/effects";
 import { searchTrackApiCall } from "../helpers/deezerApiHelper";
 import { changeSearchResult } from "../slices/searchSlice";
+import { isLiked } from "../utils/trackUtils";
 
 export const SEARCH_TRACK = "search/track";
 
@@ -23,6 +24,7 @@ export function* searchTrackWatcher({ payload }: SearchTrack): any {
   const { query } = payload;
 
   const response = yield searchTrackApiCall(query);
+
   yield put(changeSearchResult(response.map((e: any) => parseTrack(e))));
 }
 
