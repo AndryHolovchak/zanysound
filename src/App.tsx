@@ -1,28 +1,22 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import "./App.sass";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import LikedScreen from "./screens/likedScreen/LikedScreen";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { changeIsMobileEnv, selectIsMobileEnv } from "./slices/appSlice";
-import {
-  initializeDeezer,
-  signInByRedirect,
-  singInByLocalData,
-} from "./sagas/deezerSaga";
-import {
-  selectDeezerIsInitialized,
-  selectDeezerSignInStatus,
-} from "./slices/deezerSlice";
-import { DeezerSignInStatus } from "./commonDefinitions/deezerCommonDefinitions";
+import { initializeDeezer, signInByRedirect } from "./sagas/deezerSaga";
+import { selectDeezerIsInitialized, selectDeezerToken } from "./slices/deezerSlice";
 import Button from "./components/Button/Button";
 import SearchScreen from "./screens/searchScreen/SearchScreen";
 import { loadBasicUserInfo } from "./sagas/userSaga";
+import { WelcomeScreen } from "./screens/WelcomeScreen/WelcomeScreen";
 
 function App() {
   const dispatch = useAppDispatch();
   const isMobile = useAppSelector(selectIsMobileEnv);
-  const signInStatus = useAppSelector(selectDeezerSignInStatus);
+  const deezerToken = useAppSelector(selectDeezerToken);
   const deezerIsInitialized = useAppSelector(selectDeezerIsInitialized);
+  const [deezerIsReady, setDeezerIsReady] = useState(false);
 
   const handleWindowResize = useCallback(() => {
     const windowWidth = window.innerWidth;
@@ -41,29 +35,32 @@ function App() {
   //isMobile init value
   useEffect(() => {
     dispatch(changeIsMobileEnv(window.innerWidth <= 1024));
-  }, [dispatch]);
+  }, []);
+
+  // update deezerIsReady value
+  useEffect(() => {
+    setDeezerIsReady(!!deezerToken && deezerIsInitialized);
+  }, [deezerToken, deezerIsInitialized]);
 
   //init deezer
   useEffect(() => {
     dispatch(initializeDeezer({ dispatch }));
-  }, [dispatch]);
-
-  //sign in using local data
-  useEffect(() => {
-    if (
-      deezerIsInitialized &&
-      signInStatus === DeezerSignInStatus.NotSignedIn
-    ) {
-      dispatch(singInByLocalData());
-    }
-  }, [dispatch, signInStatus, deezerIsInitialized]);
+  }, []);
 
   //load user info
   useEffect(() => {
-    if (signInStatus === DeezerSignInStatus.SignedIn) {
+    if (deezerIsReady) {
       dispatch(loadBasicUserInfo());
     }
-  }, [signInStatus, dispatch]);
+  }, [deezerIsReady]);
+
+  if (!deezerIsInitialized) {
+    return <></>;
+  }
+
+  if (!deezerToken) {
+    return <WelcomeScreen />;
+  }
 
   return (
     <div className="App">
@@ -77,14 +74,6 @@ function App() {
           </Route>
         </Switch>
       </BrowserRouter>
-      {(signInStatus === DeezerSignInStatus.FailedByLocal ||
-        signInStatus === DeezerSignInStatus.FailedByRedirect) && (
-        <Button
-          title="Sign in by Deezer"
-          className={"App__sign_in_button"}
-          onCLick={() => dispatch(signInByRedirect({ dispatch }))}
-        />
-      )}
     </div>
   );
 }

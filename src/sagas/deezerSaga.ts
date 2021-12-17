@@ -1,11 +1,9 @@
 import { AnyAction, Dispatch } from "@reduxjs/toolkit";
 import { all, delay, put, takeLatest } from "redux-saga/effects";
-import { DeezerSignInStatus } from "../commonDefinitions/deezerCommonDefinitions";
 import config from "../config/config";
-import { changeDeezerIsInitialized, changeDeezerSignInStatus } from "../slices/deezerSlice";
+import { changeDeezerIsInitialized, changeDeezerToken } from "../slices/deezerSlice";
 
 export const INITIALIZE_DEEZER = "deezer/initialize";
-export const SIGN_IN_BY_LOCAL_DATA = "deezer/signInBy/localData";
 export const SIGN_IN_BY_REDIRECT = "deezer/signInBy/redirect";
 
 export interface InitializeDeezerPayload {
@@ -21,10 +19,6 @@ export interface InitializeDeezer {
   payload: InitializeDeezerPayload;
 }
 
-export interface SignInByLocalData {
-  type: typeof SIGN_IN_BY_LOCAL_DATA;
-}
-
 export interface SignInByRedirect {
   type: typeof SIGN_IN_BY_REDIRECT;
   payload: SignInByRedirectPayload;
@@ -33,10 +27,6 @@ export interface SignInByRedirect {
 export const initializeDeezer = (payload: InitializeDeezerPayload): InitializeDeezer => ({
   type: INITIALIZE_DEEZER,
   payload,
-});
-
-export const singInByLocalData = (): SignInByLocalData => ({
-  type: SIGN_IN_BY_LOCAL_DATA,
 });
 
 export const signInByRedirect = (payload: SignInByRedirectPayload): SignInByRedirect => ({
@@ -64,20 +54,6 @@ export function initializeDeezerWatcher({ payload }: InitializeDeezer) {
   document.getElementById("dz-root")?.appendChild(e);
 }
 
-export function* signInByLocalDataWatcher() {
-  let tokenFromStorage = window.localStorage.getItem(config.DEEZER_TOKEN_STORAGE_KEY);
-
-  //@ts-ignore
-  DZ.token = tokenFromStorage === "null" ? null : tokenFromStorage;
-
-  yield put(
-    changeDeezerSignInStatus(
-      //@ts-ignore
-      DZ.token ? DeezerSignInStatus.SignedIn : DeezerSignInStatus.FailedByLocal
-    )
-  );
-}
-
 export function signInByRedirectWatcher({ payload }: SignInByRedirect) {
   const { dispatch } = payload;
 
@@ -89,12 +65,8 @@ export function signInByRedirectWatcher({ payload }: SignInByRedirect) {
         //@ts-ignore
         window.localStorage.setItem(config.DEEZER_TOKEN_STORAGE_KEY, DZ.token);
       }
-      dispatch(
-        changeDeezerSignInStatus(
-          //@ts-ignore
-          !!DZ.token ? DeezerSignInStatus.SignedIn : DeezerSignInStatus.FailedByRedirect
-        )
-      );
+      //@ts-ignore
+      dispatch(changeDeezerToken(DZ.token || ""));
     },
     {
       perms: "basic_access,email,manage_community,manage_library,delete_library,offline_access",
@@ -104,6 +76,5 @@ export function signInByRedirectWatcher({ payload }: SignInByRedirect) {
 
 export default function* deezerSaga() {
   yield takeLatest(INITIALIZE_DEEZER, initializeDeezerWatcher);
-  yield takeLatest(SIGN_IN_BY_LOCAL_DATA, signInByLocalDataWatcher);
   yield takeLatest(SIGN_IN_BY_REDIRECT, signInByRedirectWatcher);
 }

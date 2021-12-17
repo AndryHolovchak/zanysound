@@ -1,16 +1,15 @@
 import { TrackModel } from "./../commonTypes/deezerTypes.d";
-import { DeezerSignInStatus } from "./../commonDefinitions/deezerCommonDefinitions";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 
 export interface DeezerState {
   deezerIsInitialized: boolean;
-  signInStatus: DeezerSignInStatus;
+  token: string;
 }
 
 const initialState: DeezerState = {
   deezerIsInitialized: false,
-  signInStatus: DeezerSignInStatus.NotSignedIn,
+  token: "",
 };
 
 export const deezerSlice = createSlice({
@@ -20,15 +19,15 @@ export const deezerSlice = createSlice({
     changeDeezerIsInitialized: (state, action: PayloadAction<boolean>) => {
       state.deezerIsInitialized = action.payload;
     },
-    changeDeezerSignInStatus: (state, action: PayloadAction<DeezerSignInStatus>) => {
-      state.signInStatus = action.payload;
+    changeDeezerToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
     },
   },
 });
 
-export const { changeDeezerIsInitialized, changeDeezerSignInStatus } = deezerSlice.actions;
+export const { changeDeezerIsInitialized, changeDeezerToken } = deezerSlice.actions;
 
 export const selectDeezerIsInitialized = (state: RootState) => state.deezer.deezerIsInitialized;
-export const selectDeezerSignInStatus = (state: RootState) => state.deezer.signInStatus;
+export const selectDeezerToken = (state: RootState) => state.deezer.token;
 
 export default deezerSlice.reducer;
