@@ -19,10 +19,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     changeUserPlaylists: (state, action: PayloadAction<PlaylistModel[]>) => {
-      state.playlists = action.payload;
+      state.playlists = [...action.payload];
     },
     changeLikedTracks: (state, action: PayloadAction<TrackModel[]>) => {
-      state.likedTracks = action.payload;
+      state.likedTracks = [...action.payload];
     },
     changeLikedTracksIds: (state, action: PayloadAction<string[]>) => {
       state.likedTracksIds = [...action.payload];
