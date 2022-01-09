@@ -62,7 +62,6 @@ function* loadBasicUserInfoWatcher(): any {
 
 function* loadUserPlaylistsWatcher(): any {
   let response: any[] = yield getUserPlaylists();
-
   const playlists: PlaylistModel[] = [];
 
   for (const playlistJson of response) {

@@ -1,5 +1,5 @@
 export enum Routes {
-  Playlists = "/playlists",
+  Collection = "/collection",
   Search = "/search",
   Liked = "/liked",
   Recommended = "/recommended",

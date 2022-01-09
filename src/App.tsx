@@ -5,18 +5,18 @@ import LikedScreen from "./screens/likedScreen/LikedScreen";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { changeIsMobileEnv, selectIsMobileEnv } from "./slices/appSlice";
 import { initializeDeezer, signInByRedirect } from "./sagas/deezerSaga";
-import { selectDeezerIsInitialized, selectDeezerToken } from "./slices/deezerSlice";
+import { changeDeezerIsInitialized, selectDeezerIsInitialized, selectDeezerToken } from "./slices/deezerSlice";
 import Button from "./components/Button/Button";
 import SearchScreen from "./screens/searchScreen/SearchScreen";
 import { loadBasicUserInfo } from "./sagas/userSaga";
 import { WelcomeScreen } from "./screens/WelcomeScreen/WelcomeScreen";
+import { CollectionScreen } from "./screens/collectionScreen/CollectionScreen";
 
 function App() {
   const dispatch = useAppDispatch();
   const isMobile = useAppSelector(selectIsMobileEnv);
   const deezerToken = useAppSelector(selectDeezerToken);
   const deezerIsInitialized = useAppSelector(selectDeezerIsInitialized);
-  const [deezerIsReady, setDeezerIsReady] = useState(false);
 
   const handleWindowResize = useCallback(() => {
     const windowWidth = window.innerWidth;
@@ -37,22 +37,30 @@ function App() {
     dispatch(changeIsMobileEnv(window.innerWidth <= 1024));
   }, []);
 
-  // update deezerIsReady value
+  //clear deezerIsInitialized
   useEffect(() => {
-    setDeezerIsReady(!!deezerToken && deezerIsInitialized);
-  }, [deezerToken, deezerIsInitialized]);
+    dispatch(changeDeezerIsInitialized(false));
+  }, []);
 
   //init deezer
   useEffect(() => {
     dispatch(initializeDeezer({ dispatch }));
   }, []);
 
+  //assing deezer token to DZ
+  useEffect(() => {
+    //@ts-ignore
+    window.DZ && (window.DZ.token = deezerToken);
+  }, [deezerToken]);
+
   //load user info
   useEffect(() => {
-    if (deezerIsReady) {
+    //@ts-ignore
+    if (window.DZ?.token && deezerIsInitialized && deezerToken) {
       dispatch(loadBasicUserInfo());
     }
-  }, [deezerIsReady]);
+    //@ts-ignore
+  }, [window.DZ?.token, deezerIsInitialized, deezerToken]);
 
   if (!deezerIsInitialized) {
     return <></>;
@@ -71,6 +79,9 @@ function App() {
           </Route>
           <Route exact path="/search">
             <SearchScreen />
+          </Route>
+          <Route exact path="/collection">
+            <CollectionScreen />
           </Route>
         </Switch>
       </BrowserRouter>
