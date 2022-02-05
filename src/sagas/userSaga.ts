@@ -1,4 +1,6 @@
-import { selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
+import { logWarning } from "./../helpers/dev";
+import { AsyncContent, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
+import { changePlaylistsTracks, selectLikedTracks, selectLikedTracksIds, selectPlaylistsTracks } from "./../slices/userSlice";
 import { addTrackToLikedApiCall, getPlaylistTracks, removeTrackFromLikedApiCall } from "./../helpers/deezerApiHelper";
 import { parsePlaylist } from "./../helpers/deezerDataHelper";
 import { PlaylistModel, TrackModel } from "./../commonTypes/deezerTypes.d";
@@ -6,11 +8,13 @@ import { parseTrack } from "../helpers/deezerDataHelper";
 import { put, select, takeLatest } from "redux-saga/effects";
 import { getUserPlaylists } from "../helpers/deezerApiHelper";
 import { changeLikedTracks, changeLikedTracksIds, changeUserPlaylists } from "../slices/userSlice";
+import { AsyncContentState } from "../commonDefinitions/miscCommonDefinitions";
 
 export const LOAD_BASIC_USER_INFO = "user/load/basicInfo";
 export const LOAD_USER_PLAYLISTS = "user/load/playlists";
 export const ADD_TRACK_TO_LIKED = "user/add/trackToLiked";
 export const REMOVE_TRACK_FROM_LIKED = "user/remove/trackFromLiked";
+export const LOAD_PLAYLIST_TRACKS = "user/load/playlistTracks";
 
 export interface AddTrackToLikedPayload {
   track: TrackModel;
@@ -18,6 +22,10 @@ export interface AddTrackToLikedPayload {
 
 export interface RemoveTrackFromLikedPayload {
   track: TrackModel;
+}
+
+export interface LoadPlaylistTracksPayload {
+  playlistId: string;
 }
 
 export interface LoadBasicUserInfo {
@@ -38,6 +46,11 @@ export interface RemoveTrackFromLiked {
   payload: RemoveTrackFromLikedPayload;
 }
 
+export interface LoadPlaylistTracks {
+  type: typeof LOAD_PLAYLIST_TRACKS;
+  payload: LoadPlaylistTracksPayload;
+}
+
 export const loadBasicUserInfo = (): LoadBasicUserInfo => ({
   type: LOAD_BASIC_USER_INFO,
 });
@@ -53,6 +66,11 @@ export const addTrackToLikedAction = (payload: AddTrackToLikedPayload): AddTrack
 
 export const removeTrackFromLikedAction = (payload: RemoveTrackFromLikedPayload): RemoveTrackFromLiked => ({
   type: REMOVE_TRACK_FROM_LIKED,
+  payload,
+});
+
+export const loadPlaylistTracksAction = (payload: LoadPlaylistTracksPayload): LoadPlaylistTracks => ({
+  type: LOAD_PLAYLIST_TRACKS,
   payload,
 });
 
@@ -122,9 +140,36 @@ function* removeTrackFromLikedWatcher({ payload }: RemoveTrackFromLiked) {
   yield removeTrackFromLikedApiCall(track.id);
 }
 
+function* loadPlaylistTracksWatcher({ payload }: LoadPlaylistTracks): any {
+  const { playlistId } = payload;
+  const playlistsTracks: PlaylistsTracks = yield select(selectPlaylistsTracks);
+
+  if (playlistsTracks[playlistId]?.state === AsyncContentState.Loading) {
+    logWarning("Playlist tracks is already loading");
+    return;
+  }
+
+  let tracksAsyncContent: AsyncContent<TrackModel[]> = {
+    state: AsyncContentState.Loading,
+    content: [],
+  };
+
+  yield put(changePlaylistsTracks({ ...playlistsTracks, [playlistId]: { ...tracksAsyncContent } }));
+
+  try {
+    const tracks: any = yield getPlaylistTracks(playlistId);
+    tracksAsyncContent.content = tracks.map((e: any) => parseTrack(e));
+  } catch {
+    tracksAsyncContent.state = AsyncContentState.Error;
+  }
+
+  yield put(changePlaylistsTracks({ ...playlistsTracks, [playlistId]: { ...tracksAsyncContent } }));
+}
+
 export default function* userSaga() {
   yield takeLatest(LOAD_BASIC_USER_INFO, loadBasicUserInfoWatcher);
   yield takeLatest(LOAD_USER_PLAYLISTS, loadUserPlaylistsWatcher);
   yield takeLatest(ADD_TRACK_TO_LIKED, addTrackToLikedWatcher);
   yield takeLatest(REMOVE_TRACK_FROM_LIKED, removeTrackFromLikedWatcher);
+  yield takeLatest(LOAD_PLAYLIST_TRACKS, loadPlaylistTracksWatcher);
 }
