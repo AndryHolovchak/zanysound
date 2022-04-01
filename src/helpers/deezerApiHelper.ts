@@ -45,3 +45,9 @@ export const addTrackToLikedApiCall = async (id: string) => {
 export const removeTrackFromLikedApiCall = async (id: string) => {
   let response: any = await deezerApiRequest(`/user/me/tracks`, { track_id: id }, RequestType.Delete);
 };
+
+export const loadRecommendedTracksApiCall = async () => {
+  let response: any = await deezerApiRequest("/user/me/recommendations/tracks");
+  console.log(response);
+  return response.data;
+};

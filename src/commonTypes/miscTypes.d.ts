@@ -12,11 +12,10 @@ export interface Mp3UrlCollection {
   [key: string]: Mp3Url;
 }
 
-export interface AsyncContent<T> {
-  state: AsyncContentState;
-  content: T;
+export interface Playlists {
+  [playlistId: string]: PlaylistModel;
 }
 
 export interface PlaylistsTracks {
-  [playlistId: string]: AsyncContent<TrackModel[]>;
+  [playlistId: string]: TrackModel[];
 }

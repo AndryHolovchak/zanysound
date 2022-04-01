@@ -63,10 +63,13 @@ export function signInByRedirectWatcher({ payload }: SignInByRedirect) {
       //@ts-ignore
       if (DZ.token) {
         //@ts-ignore
-        window.localStorage.setItem(config.DEEZER_TOKEN_STORAGE_KEY, DZ.token);
+        dispatch(changeDeezerToken(DZ.token));
       }
       //@ts-ignore
-      dispatch(changeDeezerToken(DZ.token || ""));
+      console.log(DZ.token);
+      console.log("init");
+
+      //@ts-ignore
     },
     {
       perms: "basic_access,email,manage_community,manage_library,delete_library,offline_access",

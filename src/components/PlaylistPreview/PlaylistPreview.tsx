@@ -2,7 +2,6 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { PlaylistModel } from "../../commonTypes/deezerTypes";
-import { loadPlaylistTracksAction } from "../../sagas/userSaga";
 import styles from "./playlistPreview.module.sass";
 
 export interface PlaylistPreviewProps {
@@ -14,7 +13,6 @@ export const PlaylistPreview = ({ playlistModel }: PlaylistPreviewProps) => {
 
   const handleClick = () => {
     history.push(`/playlist/${playlistModel.id}`);
-    // dispatch(loadPlaylistTracksAction({ playlistId: playlistModel.id }));
   };
 
   return (

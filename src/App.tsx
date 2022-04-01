@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "./App.sass";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import LikedScreen from "./screens/likedScreen/LikedScreen";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { changeIsMobileEnv, selectIsMobileEnv } from "./slices/appSlice";
@@ -11,6 +11,8 @@ import SearchScreen from "./screens/searchScreen/SearchScreen";
 import { loadBasicUserInfo } from "./sagas/userSaga";
 import { WelcomeScreen } from "./screens/WelcomeScreen/WelcomeScreen";
 import { CollectionScreen } from "./screens/collectionScreen/CollectionScreen";
+import { PlaylistScreen } from "./screens/playlistScreen/PlaylistScreen";
+import { RecommendedScreen } from "./screens/recommendedScreen/RecommendedScreen";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -51,7 +53,8 @@ function App() {
   useEffect(() => {
     //@ts-ignore
     window.DZ && (window.DZ.token = deezerToken);
-  }, [deezerToken]);
+    //@ts-ignore
+  }, [deezerToken, window.DZ]);
 
   //load user info
   useEffect(() => {
@@ -62,18 +65,20 @@ function App() {
     //@ts-ignore
   }, [window.DZ?.token, deezerIsInitialized, deezerToken]);
 
-  if (!deezerIsInitialized) {
-    return <></>;
-  }
-
   if (!deezerToken) {
     return <WelcomeScreen />;
+  }
+
+  //@ts-ignore
+  if (window.DZ?.token) {
+    return <span>No DZ.token</span>;
   }
 
   return (
     <div className="App">
       <BrowserRouter>
         <Switch>
+          <Route exact path="/" render={() => <Redirect to="/liked" />} />
           <Route exact path="/liked">
             <LikedScreen />
           </Route>
@@ -82,6 +87,12 @@ function App() {
           </Route>
           <Route exact path="/collection">
             <CollectionScreen />
+          </Route>
+          <Route exact path="/recommended">
+            <RecommendedScreen />
+          </Route>
+          <Route exact path="/playlist/:id">
+            <PlaylistScreen />
           </Route>
         </Switch>
       </BrowserRouter>

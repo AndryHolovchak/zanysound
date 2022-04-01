@@ -9,6 +9,7 @@ import rootSaga from "../sagas/rootSaga";
 import userSlice from "../slices/userSlice";
 import mp3Slice from "./../slices/mp3Slice";
 import playerSlice from "./../slices/playerSlice";
+import contentSlice from "./../slices/contentSlice";
 import { composeWithDevTools } from "@reduxjs/toolkit/dist/devtoolsExtension";
 
 const persistConfig = {
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   user: userSlice,
   mp3: mp3Slice,
   player: playerSlice,
+  content: contentSlice,
 });
 
 const sagaMiddleware = createSagaMiddleware();
