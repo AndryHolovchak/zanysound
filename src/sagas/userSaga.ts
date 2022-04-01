@@ -12,10 +12,10 @@ import { changeLikedTracks, changeLikedTracksIds } from "../slices/userSlice";
 import { AsyncContentState } from "../commonDefinitions/miscCommonDefinitions";
 import { changePlaylists } from "../slices/contentSlice";
 
-export const LOAD_BASIC_USER_INFO = "user/load/basicInfo";
-export const LOAD_USER_PLAYLISTS = "user/load/playlists";
-export const ADD_TRACK_TO_LIKED = "user/add/trackToLiked";
-export const REMOVE_TRACK_FROM_LIKED = "user/remove/trackFromLiked";
+const LOAD_BASIC_USER_INFO = "user/load/basicInfo";
+const LOAD_USER_PLAYLISTS = "user/load/playlists";
+const ADD_TRACK_TO_LIKED = "user/add/trackToLiked";
+const REMOVE_TRACK_FROM_LIKED = "user/remove/trackFromLiked";
 
 export interface AddTrackToLikedPayload {
   track: TrackModel;
@@ -27,10 +27,6 @@ export interface RemoveTrackFromLikedPayload {
 
 export interface LoadPlaylistTracksPayload {
   playlistId: string;
-}
-
-export interface LoadBasicUserInfo {
-  type: typeof LOAD_BASIC_USER_INFO;
 }
 
 export interface LoadUserPlaylists {
@@ -47,7 +43,7 @@ export interface RemoveTrackFromLiked {
   payload: RemoveTrackFromLikedPayload;
 }
 
-export const loadBasicUserInfo = (): LoadBasicUserInfo => ({
+export const loadBasicUserInfo = () => ({
   type: LOAD_BASIC_USER_INFO,
 });
 

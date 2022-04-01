@@ -4,21 +4,20 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import LikedScreen from "./screens/likedScreen/LikedScreen";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { changeIsMobileEnv, selectIsMobileEnv } from "./slices/appSlice";
-import { initializeDeezer, signInByRedirect } from "./sagas/deezerSaga";
-import { changeDeezerIsInitialized, selectDeezerIsInitialized, selectDeezerToken } from "./slices/deezerSlice";
-import Button from "./components/Button/Button";
+import { selectDeezerToken } from "./slices/deezerSlice";
 import SearchScreen from "./screens/searchScreen/SearchScreen";
 import { loadBasicUserInfo } from "./sagas/userSaga";
 import { WelcomeScreen } from "./screens/WelcomeScreen/WelcomeScreen";
 import { CollectionScreen } from "./screens/collectionScreen/CollectionScreen";
 import { PlaylistScreen } from "./screens/playlistScreen/PlaylistScreen";
 import { RecommendedScreen } from "./screens/recommendedScreen/RecommendedScreen";
+import { deezerApiRequest } from "./helpers/deezerApiHelper";
+import { CallbackScreen } from "./screens/callbackScreen/CallbackScreen";
 
 function App() {
   const dispatch = useAppDispatch();
   const isMobile = useAppSelector(selectIsMobileEnv);
   const deezerToken = useAppSelector(selectDeezerToken);
-  const deezerIsInitialized = useAppSelector(selectDeezerIsInitialized);
 
   const handleWindowResize = useCallback(() => {
     const windowWidth = window.innerWidth;
@@ -39,39 +38,29 @@ function App() {
     dispatch(changeIsMobileEnv(window.innerWidth <= 1024));
   }, []);
 
-  //clear deezerIsInitialized
-  useEffect(() => {
-    dispatch(changeDeezerIsInitialized(false));
-  }, []);
-
-  //init deezer
-  useEffect(() => {
-    dispatch(initializeDeezer({ dispatch }));
-  }, []);
-
-  //assing deezer token to DZ
-  useEffect(() => {
-    //@ts-ignore
-    window.DZ && (window.DZ.token = deezerToken);
-    //@ts-ignore
-  }, [deezerToken, window.DZ]);
-
   //load user info
   useEffect(() => {
     //@ts-ignore
-    if (window.DZ?.token && deezerIsInitialized && deezerToken) {
+    if (deezerToken) {
       dispatch(loadBasicUserInfo());
     }
-    //@ts-ignore
-  }, [window.DZ?.token, deezerIsInitialized, deezerToken]);
+  }, [deezerToken]);
 
   if (!deezerToken) {
-    return <WelcomeScreen />;
-  }
-
-  //@ts-ignore
-  if (window.DZ?.token) {
-    return <span>No DZ.token</span>;
+    return (
+      <div className="App">
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/cb">
+              <CallbackScreen />
+            </Route>
+            <Route path="*">
+              <WelcomeScreen />
+            </Route>
+          </Switch>
+        </BrowserRouter>
+      </div>
+    );
   }
 
   return (

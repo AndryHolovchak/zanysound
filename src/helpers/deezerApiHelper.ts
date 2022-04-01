@@ -1,3 +1,6 @@
+import { call, select } from "redux-saga/effects";
+import { store } from "../app/store";
+import { selectDeezerToken } from "../slices/deezerSlice";
 import { object2queryParams } from "./../utils/urlUtils";
 export enum RequestType {
   Get = "GET",
@@ -5,37 +8,41 @@ export enum RequestType {
   Delete = "DELETE",
 }
 
-export const deezerApiRequest = async (path: string, queryParams: object = {}, method = RequestType.Get, body: object = {}) => {
-  let generatedPath = path + object2queryParams(queryParams);
-  let promise = new Promise((resolve, reject) => {
-    //@ts-ignore
-    DZ.api(generatedPath, method, body, (response: any) => {
-      resolve(response);
-    });
-  });
+const API_URL = "https://api.deezer.com";
 
-  return promise;
-};
+export function* deezerApiRequest(path: string, queryParams: object = {}, method = RequestType.Get, body: any = {}) {
+  const token: string = yield select(selectDeezerToken);
+  const params = object2queryParams(Object.assign(queryParams, { access_token: token }));
+  const generatedPath = API_URL + path + params;
+  const finallBody = method === RequestType.Get ? undefined : body;
 
-export const getUserInfo = async () => {
-  let response = await deezerApiRequest("/user/me");
+  const response: Response = yield call(fetch, generatedPath, { method, body: finallBody });
   return response;
-};
+}
 
-export const getUserPlaylists = async () => {
-  let response: any = await deezerApiRequest("/user/me/playlists");
-  return response.data;
-};
+export function* getUserInfo() {
+  let response: Response = yield deezerApiRequest("/user/me");
+  let json: string = yield response.json();
+  return json;
+}
+
+export function* getUserPlaylists() {
+  let response: Response = yield deezerApiRequest("/user/me/playlists");
+  let json: string = yield response.json();
+  return json;
+}
 
 export const getPlaylistTracks = async (id: string) => {
   let response: any = await deezerApiRequest(`/playlist/${id}`);
-  return response.tracks.data;
+  let json = await response.json();
+  return json;
 };
 
 export const searchTrackApiCall = async (query: string, index: number = 0) => {
   let encodedQueyr = encodeURIComponent(query);
   let response: any = await deezerApiRequest(`/search?q=${encodedQueyr}&strict=off&order=RANKING&index=${index}`);
-  return response.data;
+  let json = await response.json();
+  return json;
 };
 
 export const addTrackToLikedApiCall = async (id: string) => {
@@ -48,6 +55,6 @@ export const removeTrackFromLikedApiCall = async (id: string) => {
 
 export const loadRecommendedTracksApiCall = async () => {
   let response: any = await deezerApiRequest("/user/me/recommendations/tracks");
-  console.log(response);
-  return response.data;
+  let json = await response.json();
+  return json;
 };
