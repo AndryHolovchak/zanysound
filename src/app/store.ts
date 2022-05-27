@@ -30,7 +30,7 @@ const rootReducer = combineReducers({
 const sagaMiddleware = createSagaMiddleware();
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 //@ts-ignore
-const middlewareEnhancer = compose(applyMiddleware(sagaMiddleware), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+const middlewareEnhancer = compose(applyMiddleware(sagaMiddleware)); //, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 export const store = createStore(persistedReducer, undefined, middlewareEnhancer);
 export const persistor = persistStore(store);
 

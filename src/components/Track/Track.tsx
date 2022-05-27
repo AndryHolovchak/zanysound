@@ -19,7 +19,9 @@ const Track: React.FC<TrackProps> = ({ model, liked, className, onClick }) => {
   const dispatch = useAppDispatch();
   const finalClassName = classNames([style.track, className]);
 
-  const handleLikeClick = () => {
+  const handleLikeClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.stopPropagation();
+
     if (liked) {
       dispatch(removeTrackFromLikedAction({ track: model }));
     } else {

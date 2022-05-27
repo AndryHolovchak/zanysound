@@ -22,10 +22,7 @@ export const searchTrack = (payload: SearchTrackPayload): SearchTrack => ({
 
 export function* searchTrackWatcher({ payload }: SearchTrack): any {
   const { query } = payload;
-
-  const response = yield searchTrackApiCall(query);
-
-  yield put(changeSearchResult(response.map((e: any) => parseTrack(e))));
+  yield searchTrackApiCall(query);
 }
 
 export default function* searchSaga() {

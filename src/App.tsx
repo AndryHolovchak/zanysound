@@ -4,7 +4,7 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import LikedScreen from "./screens/likedScreen/LikedScreen";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { changeIsMobileEnv, selectIsMobileEnv } from "./slices/appSlice";
-import { selectDeezerToken } from "./slices/deezerSlice";
+import { changeDeezerToken, selectDeezerToken } from "./slices/deezerSlice";
 import SearchScreen from "./screens/searchScreen/SearchScreen";
 import { loadBasicUserInfo } from "./sagas/userSaga";
 import { WelcomeScreen } from "./screens/WelcomeScreen/WelcomeScreen";
@@ -13,6 +13,8 @@ import { PlaylistScreen } from "./screens/playlistScreen/PlaylistScreen";
 import { RecommendedScreen } from "./screens/recommendedScreen/RecommendedScreen";
 import { deezerApiRequest } from "./helpers/deezerApiHelper";
 import { CallbackScreen } from "./screens/callbackScreen/CallbackScreen";
+import { handlePostMessageAction } from "./sagas/postMessageSaga";
+import { PlayerContextProvider } from "./components/PlayerContextProvider/PlayerContextProvider";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -37,6 +39,11 @@ function App() {
   useEffect(() => {
     dispatch(changeIsMobileEnv(window.innerWidth <= 1024));
   }, []);
+
+  //set post message handler
+  useState(() => {
+    window.addEventListener("message", (message) => dispatch(handlePostMessageAction({ message })));
+  });
 
   //load user info
   useEffect(() => {
@@ -65,26 +72,28 @@ function App() {
 
   return (
     <div className="App">
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/" render={() => <Redirect to="/liked" />} />
-          <Route exact path="/liked">
-            <LikedScreen />
-          </Route>
-          <Route exact path="/search">
-            <SearchScreen />
-          </Route>
-          <Route exact path="/collection">
-            <CollectionScreen />
-          </Route>
-          <Route exact path="/recommended">
-            <RecommendedScreen />
-          </Route>
-          <Route exact path="/playlist/:id">
-            <PlaylistScreen />
-          </Route>
-        </Switch>
-      </BrowserRouter>
+      <PlayerContextProvider>
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" render={() => <Redirect to="/liked" />} />
+            <Route exact path="/liked">
+              <LikedScreen />
+            </Route>
+            <Route exact path="/search">
+              <SearchScreen />
+            </Route>
+            <Route exact path="/collection">
+              <CollectionScreen />
+            </Route>
+            <Route exact path="/recommended">
+              <RecommendedScreen />
+            </Route>
+            <Route exact path="/playlist/:id">
+              <PlaylistScreen />
+            </Route>
+          </Switch>
+        </BrowserRouter>
+      </PlayerContextProvider>
     </div>
   );
 }

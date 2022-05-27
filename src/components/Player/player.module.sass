@@ -2,9 +2,14 @@
 
 .player
   display: flex
-  align-items: center
+  flex-direction: column
   padding: 2vh 5vw
   background-color: #101113
+
+  &__bottom
+    flex: 1
+    display: flex
+    align-items: center
 
   &__cover
     width: 8vh
@@ -22,3 +27,35 @@
   &__artist
     color: $gray
     font-size: 2vh
+
+  &__controls
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin-left: auto
+    margin-right: 2vh
+
+  &__queue_control
+    font-size: 4vh
+
+  &__mode_control
+    font-size: 3vh
+
+    &--active
+      color: #80e2ac
+
+  &__toggle_play
+    font-size: 3.5vh
+    margin: 0 5vh
+
+  &__shuffle
+    width: 3vh
+    height: 3vh
+
+    &--active
+      filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)
+
+.progress_bar
+  display: flex
+  align-items: center
+  justify-content: space-between

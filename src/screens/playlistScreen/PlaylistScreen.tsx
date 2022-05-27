@@ -19,14 +19,10 @@ export const PlaylistScreen = () => {
 
   const targetTracks = playlistsTracks[id];
 
-  if (!targetTracks?.length) {
-    return <span>Playlist is empty or not loaded yet</span>;
-  }
-
   return (
     <ScreenContainer>
       <div className={styles.playlist_screen}>
-        <Tracklist tracks={targetTracks} />
+        <Tracklist tracks={targetTracks || []} id={id} />
       </div>
     </ScreenContainer>
   );

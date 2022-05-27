@@ -66,34 +66,7 @@ function* loadBasicUserInfoWatcher(): any {
 }
 
 function* loadUserPlaylistsWatcher(): any {
-  let response: any[] = yield getUserPlaylists();
-  console.log(response);
-  const receivedPlaylists: PlaylistModel[] = [];
-
-  for (const playlistJson of response) {
-    const parsedPlaylist = parsePlaylist(playlistJson);
-
-    if (parsedPlaylist.isLikedTracks) {
-      const likedTracksJson: any[] = yield getPlaylistTracks(parsedPlaylist.id);
-      const likedTracks: TrackModel[] = likedTracksJson.map((e) => parseTrack(e));
-      const reversedTracks = likedTracks.reverse();
-
-      yield put(changeLikedTracks(likedTracks));
-      yield put(changeLikedTracksIds(reversedTracks.map((e) => e.id)));
-    } else {
-      receivedPlaylists.push(parsedPlaylist);
-    }
-  }
-  const allPlaylists = yield select(selectPlaylists);
-
-  const playlistsObject: Playlists = {};
-
-  receivedPlaylists.forEach((item) => {
-    playlistsObject[item.id] = item;
-  });
-
-  yield put(changePlaylists({ ...allPlaylists, ...playlistsObject }));
-  yield put(changeUserPlaylistsIds(receivedPlaylists.map((p) => p.id)));
+  yield getUserPlaylists();
 }
 
 function* addTrackToLikedWatcher({ payload }: AddTrackToLiked) {

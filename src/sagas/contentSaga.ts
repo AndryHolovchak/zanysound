@@ -31,18 +31,11 @@ export const loadRecommendedTracksAction = () => ({
 
 function* loadPlaylistTracksWatcher({ payload }: LoadPlaylistTracks): any {
   const { playlistId } = payload;
-  const playlistsTracks: PlaylistsTracks = yield select(selectPlaylistsTracks);
-
-  const tracks: any = yield getPlaylistTracks(playlistId);
-  const parsedTracks: TrackModel[] = tracks.map((e: any) => parseTrack(e));
-
-  yield put(changePlaylistsTracks({ ...playlistsTracks, [playlistId]: parsedTracks }));
+  yield getPlaylistTracks(playlistId);
 }
 
 function* loadRecommendedTracksWatcher(): any {
-  const tracks: any[] = yield loadRecommendedTracksApiCall();
-  const parsedTracks: TrackModel[] = tracks.map((t) => parseTrack(t));
-  yield put(changeRecommendedTracks(parsedTracks));
+  yield loadRecommendedTracksApiCall();
 }
 
 export default function* contentSaga() {

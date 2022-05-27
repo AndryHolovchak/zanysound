@@ -21,7 +21,7 @@ export const RecommendedScreen = () => {
   return (
     <ScreenContainer>
       <div className={styles.recommended_screen}>
-        <Tracklist tracks={tracks} />
+        <Tracklist tracks={tracks} id="1" />
       </div>
     </ScreenContainer>
   );

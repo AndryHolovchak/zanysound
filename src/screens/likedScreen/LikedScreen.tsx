@@ -12,7 +12,7 @@ const LikedScreen = () => {
   return (
     <ScreenContainer>
       <div className={style.liked_screen}>
-        <Tracklist tracks={likedTracks} />
+        <Tracklist tracks={likedTracks} id="0" />
       </div>
     </ScreenContainer>
   );

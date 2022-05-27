@@ -4,17 +4,18 @@ import Icon from "../../components/Icon/Icon";
 import ScreenContainer from "../../components/ScreenContainer/ScreenContainer";
 import Tracklist from "../../components/Tracklist/Tracklist";
 import { searchTrack } from "../../sagas/searchSaga";
-import { selectSearchResult } from "../../slices/searchSlice";
+import { selectSearchResult, selectSearchResultId } from "../../slices/searchSlice";
 import style from "./searchScreen.module.sass";
 
 const SearchScreen: React.FC = () => {
   const searchResult = useAppSelector(selectSearchResult);
+  const searchResultId = useAppSelector(selectSearchResultId);
 
   return (
     <ScreenContainer>
       <div className={style.search_screen}>
         <SearchScreenInput />
-        <Tracklist tracks={searchResult} className={style.search_screen__tracklist} />
+        <Tracklist id={searchResultId} tracks={searchResult} className={style.search_screen__tracklist} />
       </div>
     </ScreenContainer>
   );
