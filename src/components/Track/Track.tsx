@@ -2,7 +2,7 @@ import classNames from "classnames";
 import React from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { TrackModel } from "../../commonTypes/deezerTypes";
-import { generateMp3Url } from "../../sagas/mp3Saga";
+import { retrieveMp3UrlAction } from "../../sagas/mp3Saga";
 import { addTrackToLikedAction, removeTrackFromLikedAction } from "../../sagas/userSaga";
 import Icon from "../Icon/Icon";
 import { IconType } from "../Icon/iconCommonDefinition";
@@ -11,13 +11,14 @@ import style from "./track.module.sass";
 export interface TrackProps {
   model: TrackModel;
   liked: boolean;
+  playing: boolean;
   className?: string;
   onClick?: () => void;
 }
 
-const Track: React.FC<TrackProps> = ({ model, liked, className, onClick }) => {
+const Track: React.FC<TrackProps> = ({ model, liked, playing, className, onClick }) => {
   const dispatch = useAppDispatch();
-  const finalClassName = classNames([style.track, className]);
+  const finalClassName = classNames([style.track, className, playing && style["track--playing"]]);
 
   const handleLikeClick = (e: React.MouseEvent<HTMLElement>) => {
     e.stopPropagation();

@@ -1,5 +1,6 @@
 export enum PostMessageType {
   Fetch = "Fetch",
+  Mp3 = "Mp3",
 }
 
 export enum FetchPostMessageType {

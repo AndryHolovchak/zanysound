@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { PostMessageType } from "../../commonDefinitions/postMessageCommonDefinitions";
 import { TrackModel } from "../../commonTypes/deezerTypes";
 import { PlayerContextValue } from "../../commonTypes/playerTypes";
 import PlayerContext, { PlayerProvider } from "../../contexts/playerContext";
-import { selectMp3Urls } from "../../slices/mp3Slice";
+import { retrieveMp3UrlAction } from "../../sagas/mp3Saga";
+import { selectMp3Urls, selectVideoIds } from "../../slices/mp3Slice";
+import { shuffle } from "../../utils/arrayUtils";
+import { sendPostMessage } from "../../utils/postMessage";
+import { isExpired } from "../../utils/trackUtils";
 import { getSearchQuery } from "../../utils/youtubeUtils";
 
 export interface PlayerContextProvider {}
 
 export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ children }) => {
-  const [tracklist, setTracklist] = useState<TrackModel[]>([]);
+  const dispatch = useAppDispatch();
+
+  const mp3 = useAppSelector(selectMp3Urls);
+
+  const [originalQueue, setOriginalQueue] = useState<TrackModel[]>([]);
+  const [currentQueue, setCurrentQueue] = useState<TrackModel[]>([]);
   const [tracklistId, setTracklistId] = useState("");
   const [track, setTrack] = useState<TrackModel | null>(null);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
@@ -52,16 +62,35 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
     }
   }, [track, onRepeat, audio]);
 
+  useEffect(() => {
+    if (audio && track && !audio.getAttribute("src")) {
+      const trackMp3Url = mp3[track.id];
+
+      if (trackMp3Url) {
+        audio.setAttribute("src", trackMp3Url);
+        audio.play();
+      }
+    }
+  }, [track, mp3, audio]);
+
   const toggleRepeat = () => setOnRepeat(!onRepeat);
 
-  const toggleShuffle = () => setShuffled(!shuffled);
+  const toggleShuffle = () => {
+    if (shuffled) {
+      setCurrentQueue(originalQueue);
+    } else {
+      setCurrentQueue(shuffle(originalQueue));
+    }
+
+    setShuffled(!shuffled);
+  };
 
   const getValidTrackIndex = (index: number) => {
     switch (index) {
-      case tracklist.length:
+      case currentQueue.length:
         return 0;
       case -1:
-        return tracklist.length - 1;
+        return currentQueue.length - 1;
       case -2: // if a user delets current track (findIndex will return -1) and press previous button
         return 0;
       default:
@@ -70,15 +99,15 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
   };
 
   const next = () => {
-    const nextTrackIndex = tracklist.findIndex((e) => e.id === track?.id) + 1;
-    const nextTrack = tracklist[getValidTrackIndex(nextTrackIndex)];
+    const nextTrackIndex = currentQueue.findIndex((e) => e.id === track?.id) + 1;
+    const nextTrack = currentQueue[getValidTrackIndex(nextTrackIndex)];
 
     playMp3(nextTrack);
   };
 
   const previous = () => {
-    const nextTrackIndex = tracklist.findIndex((e) => e.id === track?.id) - 1;
-    const nextTrack = tracklist[getValidTrackIndex(nextTrackIndex)];
+    const nextTrackIndex = currentQueue.findIndex((e) => e.id === track?.id) - 1;
+    const nextTrack = currentQueue[getValidTrackIndex(nextTrackIndex)];
 
     playMp3(nextTrack);
   };
@@ -102,8 +131,14 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
 
   const playNewTracklist = (id: string, tracks: TrackModel[], initTrack: TrackModel) => {
     setTracklistId(id);
-    setTracklist(tracks);
+    setOriginalQueue(tracks);
     playMp3(initTrack);
+
+    if (shuffled) {
+      setCurrentQueue(shuffle(tracks));
+    } else {
+      setCurrentQueue(tracks);
+    }
   };
 
   const playMp3 = async (targetTrack: TrackModel) => {
@@ -111,23 +146,35 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
 
     audio?.setAttribute("src", "");
 
-    const mp3VideoIdResponse = await fetch(`http://localhost:3001/youtube/search?q=${encodeURIComponent(getSearchQuery(targetTrack))}`);
-    const mp3VideoIdJson = await mp3VideoIdResponse.json();
-    const mp3VideoId = mp3VideoIdJson.id;
+    const targetUrl = mp3[targetTrack.id];
 
-    const mp3UrlResponse = await fetch(`http://localhost:3001/youtube/mp3?id=${mp3VideoId}`);
-    const mp3UrlJson = await mp3UrlResponse.json();
-    const mp3Url = mp3UrlJson.url;
-
-    if (mp3Url) {
-      audio?.setAttribute("src", mp3Url);
+    if (targetUrl && !isExpired(targetUrl)) {
+      audio?.setAttribute("src", targetUrl);
       audio?.play();
       // audio?.volume && (audio.volume = 0);
+    } else {
+      dispatch(retrieveMp3UrlAction({ track: targetTrack }));
     }
   };
 
   const syncTracklist = (tracks: TrackModel[]) => {
-    setTracklist(tracks);
+    setOriginalQueue(tracks);
+
+    if (shuffled) {
+      // keep current queue order
+      const newQueue = currentQueue.filter((track) => tracks.find((e) => e.id === track.id));
+
+      //and add new tracks
+      tracks.forEach((track) => {
+        if (!newQueue.find((e) => e.id === track.id)) {
+          newQueue.push(track);
+        }
+      });
+
+      setCurrentQueue(newQueue);
+    } else {
+      setCurrentQueue(tracks);
+    }
   };
 
   const value: PlayerContextValue = {

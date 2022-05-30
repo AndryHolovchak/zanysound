@@ -20,5 +20,7 @@ export interface PostMessageFetchPayload {
 }
 
 export interface PostMessageMp3Payload {
+  query: string;
   trackId: string;
+  videoId?: string;
 }

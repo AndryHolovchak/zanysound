@@ -12,6 +12,7 @@ import { searchTrackApiCall } from "../helpers/deezerApiHelper";
 import { changeSearchResult, changeSearchResultId } from "../slices/searchSlice";
 import { isLiked } from "../utils/trackUtils";
 import { changeLikedTracks, changeLikedTracksIds, changeUserPlaylistsIds } from "../slices/userSlice";
+import { setMp3Url, setVideoId } from "../slices/mp3Slice";
 
 const HANDLE_POST_MESSAGE = "postMessage/handle";
 
@@ -60,6 +61,8 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
       case FetchPostMessageType.LoadRecommendedTracks:
         yield handleLoadRecomendedTracks(response.data);
     }
+  } else if (initiator.type === PostMessageType.Mp3) {
+    yield handleMp3Response(response.data);
   }
 }
 
@@ -118,6 +121,18 @@ function* handleSearchTrack(response: any[]) {
 function* handleLoadRecomendedTracks(response: any[]) {
   const parsedTracks: TrackModel[] = response.map((t) => parseTrack(t));
   yield put(changeRecommendedTracks(parsedTracks));
+}
+
+function* handleMp3Response(response: any) {
+  const { trackId, videoId, mp3 } = response;
+
+  yield put(
+    setMp3Url({
+      id: trackId,
+      mp3Url: mp3,
+    })
+  );
+  yield put(setVideoId({ trackId, videoId }));
 }
 
 export default function* poseMessageSaga() {

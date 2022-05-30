@@ -38,7 +38,14 @@ const Tracklist: React.FC<TracklistProps> = ({ id, tracks, className }) => {
     <div className={finalClassName}>
       <div className={style.tracklist__inner}>
         {tracks.map((e) => (
-          <Track key={e.id} liked={likedTracksIds.includes(e.id)} model={e} onClick={() => handleTrackClick(e)} className={style.tracklist__track} />
+          <Track
+            playing={player.track?.id === e.id}
+            key={e.id}
+            liked={likedTracksIds.includes(e.id)}
+            model={e}
+            onClick={() => handleTrackClick(e)}
+            className={style.tracklist__track}
+          />
         ))}
       </div>
     </div>

@@ -42,7 +42,11 @@ function App() {
 
   //set post message handler
   useState(() => {
-    window.addEventListener("message", (message) => dispatch(handlePostMessageAction({ message })));
+    window.addEventListener("message", (message) => {
+      if (!message.data.source?.includes("@devtools")) {
+        dispatch(handlePostMessageAction({ message }));
+      }
+    });
   });
 
   //load user info

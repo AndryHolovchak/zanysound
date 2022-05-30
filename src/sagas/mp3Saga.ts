@@ -1,47 +1,43 @@
+import { getSearchQuery } from "./../utils/youtubeUtils";
+import { PostMessageType } from "./../commonDefinitions/postMessageCommonDefinitions";
+import { TrackModel } from "./../commonTypes/deezerTypes.d";
 import { Mp3Url } from "./../commonTypes/miscTypes.d";
-import { put, takeLatest } from "redux-saga/effects";
+import { put, select, takeLatest } from "redux-saga/effects";
 import config from "../config/config";
 import { object2queryParams } from "../utils/urlUtils";
-import { setMp3Url } from "../slices/mp3Slice";
+import { selectVideoIds, setMp3Url } from "../slices/mp3Slice";
+import { sendPostMessage } from "../utils/postMessage";
 
-export const GENERATE_MP3_URL = "mp3/generate/url";
+export const RETRIEVE_MP3_URL = "mp3/retrieve/url";
 
-export interface GenerateMp3UrlPayload {
-  title: string;
-  artist: string;
-  trackId: string;
+export interface RetrieveMp3UrlPayload {
+  track: TrackModel;
 }
 
-export interface GenerateMp3Url {
-  type: typeof GENERATE_MP3_URL;
-  payload: GenerateMp3UrlPayload;
+export interface RetrieveMp3Url {
+  type: typeof RETRIEVE_MP3_URL;
+  payload: RetrieveMp3UrlPayload;
 }
 
-export const generateMp3Url = (
-  payload: GenerateMp3UrlPayload
-): GenerateMp3Url => ({
-  type: GENERATE_MP3_URL,
+export const retrieveMp3UrlAction = (payload: RetrieveMp3UrlPayload): RetrieveMp3Url => ({
+  type: RETRIEVE_MP3_URL,
   payload,
 });
 
-export function* generateMp3UrlWatcher({ payload }: GenerateMp3Url): any {
-  const { title, artist, trackId } = payload;
+function* retrieveMp3UrlWatcher({ payload }: RetrieveMp3Url): any {
+  const { track } = payload;
+  const videoIds = yield select(selectVideoIds);
 
-  const queryParams = object2queryParams({ title, artist, deezerId: trackId });
-  console.log(config.MP3_SERVER_URL + "/url/mp3" + queryParams);
-  const response = yield fetch(
-    config.MP3_SERVER_URL + "/url/mp3" + queryParams
-  );
-  const data = yield response.json();
-  const mp3Url: Mp3Url = {
-    ulr: data,
-    expires: response.headers.get("Expires"),
-    canExpire: true,
-  };
-
-  yield put(setMp3Url({ id: trackId, mp3Url }));
+  yield sendPostMessage({
+    type: PostMessageType.Mp3,
+    payload: {
+      query: getSearchQuery(track),
+      trackId: track.id,
+      videoId: videoIds[track.id],
+    },
+  });
 }
 
 export default function* mp3Saga() {
-  yield takeLatest(GENERATE_MP3_URL, generateMp3UrlWatcher);
+  yield takeLatest(RETRIEVE_MP3_URL, retrieveMp3UrlWatcher);
 }

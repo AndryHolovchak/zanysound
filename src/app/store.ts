@@ -10,7 +10,6 @@ import userSlice from "../slices/userSlice";
 import mp3Slice from "./../slices/mp3Slice";
 import playerSlice from "./../slices/playerSlice";
 import contentSlice from "./../slices/contentSlice";
-import { composeWithDevTools } from "@reduxjs/toolkit/dist/devtoolsExtension";
 
 const persistConfig = {
   key: "persist-root",
@@ -30,7 +29,7 @@ const rootReducer = combineReducers({
 const sagaMiddleware = createSagaMiddleware();
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 //@ts-ignore
-const middlewareEnhancer = compose(applyMiddleware(sagaMiddleware)); //, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+const middlewareEnhancer = compose(applyMiddleware(sagaMiddleware), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()); //, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 export const store = createStore(persistedReducer, undefined, middlewareEnhancer);
 export const persistor = persistStore(store);
 

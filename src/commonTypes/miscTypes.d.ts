@@ -3,13 +3,16 @@ import { TrackModel } from "./deezerTypes.d";
 import { AsyncContentState } from "../commonDefinitions/miscCommonDefinitions";
 
 export interface Mp3Url {
-  ulr: string;
+  url: string;
   expires: string;
-  canExpire: boolean;
 }
 
 export interface Mp3UrlCollection {
-  [key: string]: Mp3Url;
+  [trackId: string]: string;
+}
+
+export interface VideoIdsCollection {
+  [trackId: string]: string;
 }
 
 export interface Playlists {
