@@ -30,6 +30,8 @@ const Track: React.FC<TrackProps> = ({ model, liked, playing, className, onClick
     }
   };
 
+  const handleDotsClick = () => {};
+
   return (
     <div className={finalClassName} onClick={onClick}>
       <img alt="cover" src={model.album.cover} className={style.track__cover} />
@@ -38,6 +40,7 @@ const Track: React.FC<TrackProps> = ({ model, liked, playing, className, onClick
         <span className={style.track__artist}>{model.artist.name}</span>
       </div>
       <Icon name="heart" type={liked ? IconType.Solid : IconType.Light} className={style.track__like} onClick={handleLikeClick} />
+      <Icon name="ellipsis-v" className={style.track__dots} onClick={handleDotsClick} />
     </div>
   );
 };

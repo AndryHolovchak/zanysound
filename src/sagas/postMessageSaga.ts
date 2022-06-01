@@ -1,17 +1,18 @@
-import { generateId } from "./../utils/common";
+import { loadPlaylistInfoAction } from "./contentSaga";
+import { copyObject, generateId } from "./../utils/common";
 import { getPlaylistTracks } from "./../helpers/deezerApiHelper";
 import { Playlists, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
 import { selectPlaylists, changePlaylists, selectPlaylistsTracks, changePlaylistsTracks, changeRecommendedTracks } from "./../slices/contentSlice";
 import { parsePlaylist } from "./../helpers/deezerDataHelper";
 import { PlaylistModel, TrackModel } from "./../commonTypes/deezerTypes.d";
 import { PostMessageType, FetchPostMessageType } from "./../commonDefinitions/postMessageCommonDefinitions";
-import { PostMessageFetchPayload, PostMessageResponse } from "./../commonTypes/postMessageTypes";
+import { PostMessage, PostMessageFetchPayload, PostMessageResponse } from "./../commonTypes/postMessageTypes";
 import { parseTrack } from "../helpers/deezerDataHelper";
 import { put, select, takeLatest } from "redux-saga/effects";
 import { searchTrackApiCall } from "../helpers/deezerApiHelper";
 import { changeSearchResult, changeSearchResultId } from "../slices/searchSlice";
 import { isLiked } from "../utils/trackUtils";
-import { changeLikedTracks, changeLikedTracksIds, changeUserPlaylistsIds } from "../slices/userSlice";
+import { changeLikedTracks, changeLikedTracksIds } from "../slices/userSlice";
 import { setMp3Url, setVideoId } from "../slices/mp3Slice";
 
 const HANDLE_POST_MESSAGE = "postMessage/handle";
@@ -34,6 +35,7 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
   const { message } = payload;
 
   const parsed: PostMessageResponse = JSON.parse(message.data);
+
   const initiator = parsed.initiator;
   const response = parsed.response;
 
@@ -51,6 +53,9 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
       case FetchPostMessageType.GetPlaylistTracks:
         yield handleGetPlaylistTracks(response);
         break;
+      case FetchPostMessageType.GetPlaylistInfo:
+        yield handleGetPlaylistInfo(response);
+        break;
       case FetchPostMessageType.SearchTrack:
         yield handleSearchTrack(response.data);
         break;
@@ -60,6 +65,13 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
         break;
       case FetchPostMessageType.LoadRecommendedTracks:
         yield handleLoadRecomendedTracks(response.data);
+        break;
+      case FetchPostMessageType.CreateNewPlaylist:
+        yield handleCreateNewPlaylistResponse(response);
+        break;
+      case FetchPostMessageType.DeletePlaylist:
+        yield handleDeletePlaylistResponse(initiator, response);
+        break;
     }
   } else if (initiator.type === PostMessageType.Mp3) {
     yield handleMp3Response(response.data);
@@ -90,7 +102,6 @@ function* handleGetUserPlaylist(response: any[]) {
   });
 
   yield put(changePlaylists({ ...allPlaylists, ...playlistsObject }));
-  yield put(changeUserPlaylistsIds(receivedPlaylists.map((p) => p.id)));
 
   //load liked tracks
   if (likedPlaylist) {
@@ -113,6 +124,17 @@ function* handleGetPlaylistTracks(response: any) {
   }
 }
 
+function* handleGetPlaylistInfo(response: any) {
+  const allPlaylists: Playlists = yield select(selectPlaylists);
+  const playlistsTracks: PlaylistsTracks = yield select(selectPlaylistsTracks);
+
+  const parsedPlaylist = parsePlaylist(response);
+  const parsedTracks: TrackModel[] = response.tracks.data.map((e: any) => parseTrack(e));
+
+  yield put(changePlaylists({ ...allPlaylists, [parsedPlaylist.id]: parsedPlaylist }));
+  yield put(changePlaylistsTracks({ ...playlistsTracks, [parsedPlaylist.id]: parsedTracks }));
+}
+
 function* handleSearchTrack(response: any[]) {
   yield put(changeSearchResult(response.map((e: any) => parseTrack(e))));
   yield put(changeSearchResultId(generateId()));
@@ -121,6 +143,35 @@ function* handleSearchTrack(response: any[]) {
 function* handleLoadRecomendedTracks(response: any[]) {
   const parsedTracks: TrackModel[] = response.map((t) => parseTrack(t));
   yield put(changeRecommendedTracks(parsedTracks));
+}
+
+function* handleCreateNewPlaylistResponse(response: any) {
+  const { id } = response;
+
+  yield put(loadPlaylistInfoAction({ playlistId: id }));
+}
+
+function* handleDeletePlaylistResponse(message: PostMessage, response: any) {
+  if (response) {
+    const playlists: Playlists = yield select(selectPlaylists);
+    const playlistsTracks: PlaylistsTracks = yield select(selectPlaylistsTracks);
+
+    const playlistsCopy = copyObject(playlists);
+    const playlistsTracksCopy = copyObject(playlistsTracks);
+
+    const url = new URL((message.payload as PostMessageFetchPayload).url);
+
+    const pathnameArray = url.pathname.split("/");
+    const playlistId = pathnameArray[pathnameArray.length - 1];
+
+    delete playlistsCopy[playlistId];
+    delete playlistsTracksCopy[playlistId];
+
+    yield put(changePlaylists(playlistsCopy));
+    yield put(changePlaylistsTracks(playlistsTracksCopy));
+  } else {
+    //TODO: show error
+  }
 }
 
 function* handleMp3Response(response: any) {

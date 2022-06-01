@@ -21,8 +21,12 @@ const Tracklist: React.FC<TracklistProps> = ({ id, tracks, className }) => {
   const likedTracksIds = useAppSelector(selectLikedTracksIds);
 
   const handleTrackClick = (track: TrackModel) => {
-    if (player?.tracklistId === id) {
-      player.playTrackFromTracklist(track);
+    if (player.tracklistId === id) {
+      if (player.track?.id === track.id) {
+        player.togglePlay();
+      } else {
+        player.playTrackFromTracklist(track);
+      }
     } else {
       player?.playNewTracklist(id, tracks, track);
     }

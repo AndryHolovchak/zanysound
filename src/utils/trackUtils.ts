@@ -9,7 +9,6 @@ export function* isLiked(trackId: string) {
 }
 
 export const isExpired = (url: string) => {
-  console.log(url);
   const urlObject = new URL(url);
 
   const expireDate = urlObject.searchParams.get("expire");

@@ -11,7 +11,7 @@ export interface ContentState {
 }
 
 const initialState: ContentState = {
-  playlists: [],
+  playlists: {},
   playlistsTracks: {},
   recommendedTracks: [],
 };

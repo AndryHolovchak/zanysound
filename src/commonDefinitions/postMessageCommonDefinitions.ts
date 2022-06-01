@@ -7,8 +7,11 @@ export enum FetchPostMessageType {
   GetUserInfo,
   GetUserPlaylists,
   GetPlaylistTracks,
+  GetPlaylistInfo,
   SearchTrack,
   AddTrackToLiked,
   RemoveTrackFromLiked,
   LoadRecommendedTracks,
+  CreateNewPlaylist,
+  DeletePlaylist,
 }

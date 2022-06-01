@@ -37,9 +37,13 @@ export function* getPlaylistTracks(id: string) {
   yield deezerApiRequest(FetchPostMessageType.GetPlaylistTracks, `/playlist/${id}`);
 }
 
+export function* getPlaylistInfoApiCall(id: string) {
+  yield deezerApiRequest(FetchPostMessageType.GetPlaylistInfo, `/playlist/${id}`);
+}
+
 export function* searchTrackApiCall(query: string, index: number = 0) {
-  let encodedQueyr = encodeURIComponent(query);
-  yield deezerApiRequest(FetchPostMessageType.SearchTrack, `/search?q=${encodedQueyr}&strict=off&order=RANKING&index=${index}`);
+  let encodedQuery = encodeURIComponent(query);
+  yield deezerApiRequest(FetchPostMessageType.SearchTrack, `/search?q=${encodedQuery}&strict=off&order=RANKING&index=${index}`);
 }
 
 export function* addTrackToLikedApiCall(id: string) {
@@ -52,4 +56,12 @@ export function* removeTrackFromLikedApiCall(id: string) {
 
 export function* loadRecommendedTracksApiCall() {
   yield deezerApiRequest(FetchPostMessageType.LoadRecommendedTracks, "/user/me/recommendations/tracks");
+}
+
+export function* createNewPlaylistApiCall(title: string) {
+  yield deezerApiRequest(FetchPostMessageType.CreateNewPlaylist, "/user/me/playlists", { title }, RequestType.Post);
+}
+
+export function* deletePlaylistApiCall(id: string) {
+  yield deezerApiRequest(FetchPostMessageType.DeletePlaylist, `/playlist/${id}`, {}, RequestType.Delete);
 }

@@ -1,5 +1,5 @@
 import { AsyncContent } from "./miscTypes.d";
-import { TrackModel } from "./deezerTypes.d";
+import { TrackModel, PlaylistModel } from "./deezerTypes.d";
 import { AsyncContentState } from "../commonDefinitions/miscCommonDefinitions";
 
 export interface Mp3Url {

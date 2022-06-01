@@ -1,26 +1,55 @@
-import React from "react";
-import { useAppSelector } from "../../app/hooks";
+import React, { useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { PlaylistModel } from "../../commonTypes/deezerTypes";
 import { Playlists } from "../../commonTypes/miscTypes";
+import Button from "../../components/Button/Button";
+import Icon from "../../components/Icon/Icon";
+import { Modal } from "../../components/Modal/Modal";
 import { PlaylistPreview } from "../../components/PlaylistPreview/PlaylistPreview";
 import ScreenContainer from "../../components/ScreenContainer/ScreenContainer";
+import { createNewPlaylistAction } from "../../sagas/contentSaga";
 import { selectPlaylists } from "../../slices/contentSlice";
-import { selectUserPlaylistsIds } from "../../slices/userSlice";
 import styles from "./collectionScreen.module.sass";
 
 export const CollectionScreen = () => {
-  const playlists: Playlists = useAppSelector(selectPlaylists);
-  const userPlaylistsIds: string[] = useAppSelector(selectUserPlaylistsIds);
-
-  const userPlaylists: PlaylistModel[] = Object.values(playlists).filter((i) => userPlaylistsIds.includes(i.id));
+  const [showNewPlaylistModal, setShowNewPlaylistModal] = useState(false);
+  const playlistsCollection: Playlists = useAppSelector(selectPlaylists);
+  const playlists = Object.values(playlistsCollection).sort((a, b) => +new Date(b.creationDate) - +new Date(a.creationDate));
 
   return (
     <ScreenContainer>
       <div className={styles.collection_screen}>
-        {userPlaylists.map((e) => (
-          <PlaylistPreview playlistModel={e} />
+        <div className={styles.collection_screen__new_button} onClick={() => setShowNewPlaylistModal(true)}>
+          <Icon name="plus" className={styles.collection_screen__new_button_icon} />
+        </div>
+        {Object.entries(playlists).map((e) => (
+          <PlaylistPreview key={e[0]} playlistModel={e[1]} />
         ))}
+        {showNewPlaylistModal && <NewPlaylistModal onClose={() => setShowNewPlaylistModal(false)} />}
       </div>
     </ScreenContainer>
+  );
+};
+
+interface NewPlaylistModalProps {
+  onClose: () => void;
+}
+
+const NewPlaylistModal = ({ onClose }: NewPlaylistModalProps) => {
+  const dispatch = useAppDispatch();
+  const [title, setTitle] = useState("");
+
+  const handleButtonClick = () => {
+    if (title) {
+      dispatch(createNewPlaylistAction({ title }));
+      onClose();
+    }
+  };
+
+  return (
+    <Modal onClose={onClose}>
+      <input placeholder="playlist name" value={title} onChange={(e) => setTitle(e.target.value)} />
+      <Button title="Create" onCLick={handleButtonClick} />
+    </Modal>
   );
 };

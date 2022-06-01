@@ -66,7 +66,7 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
     if (audio && track && !audio.getAttribute("src")) {
       const trackMp3Url = mp3[track.id];
 
-      if (trackMp3Url) {
+      if (trackMp3Url && !isExpired(trackMp3Url)) {
         audio.setAttribute("src", trackMp3Url);
         audio.play();
       }

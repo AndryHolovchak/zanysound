@@ -1,7 +1,7 @@
 import { changePlaylistsTracks, selectPlaylists, selectPlaylistsTracks } from "./../slices/contentSlice";
 import { logWarning } from "./../helpers/dev";
 import { Playlists, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
-import { changeUserPlaylistsIds, selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
+import { selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
 import { addTrackToLikedApiCall, getPlaylistTracks, removeTrackFromLikedApiCall } from "./../helpers/deezerApiHelper";
 import { parsePlaylist } from "./../helpers/deezerDataHelper";
 import { PlaylistModel, TrackModel } from "./../commonTypes/deezerTypes.d";
