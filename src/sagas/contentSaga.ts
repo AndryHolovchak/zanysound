@@ -1,10 +1,12 @@
 import { TrackModel } from "./../commonTypes/deezerTypes.d";
 import {
+  addToPlaylistApiCall,
   createNewPlaylistApiCall,
   deletePlaylistApiCall,
   getPlaylistInfoApiCall,
   getPlaylistTracks,
   loadRecommendedTracksApiCall,
+  removeFromPlaylistApiCall,
 } from "./../helpers/deezerApiHelper";
 import { PlaylistsTracks } from "./../commonTypes/miscTypes.d";
 import { parseTrack } from "../helpers/deezerDataHelper";
@@ -19,6 +21,8 @@ export const LOAD_RECOMMENDED_TRACKS = "content/load/recommendedTracks";
 export const CREATE_NEW_PLAYLIST = "content/create/playlist";
 export const LOAD_PLAYLIST_INFO = "content/load/playlist";
 export const DELETE_PLAYLIST = "content/delete/playlist";
+export const ADD_TO_PLAYLIST = "content/add/toPlaylist";
+export const REMOVE_FROM_PLAYLIST = "content/remove/fromPlaylist";
 
 export interface LoadPlaylistTracksPayload {
   playlistId: string;
@@ -33,6 +37,16 @@ export interface LoadPlaylistInfoPayload {
 }
 
 export interface DeletePlaylistPayload {
+  playlistId: string;
+}
+
+export interface AddToPlaylistPayload {
+  trackId: string;
+  playlistId: string;
+}
+
+export interface RemoveFromPlaylistPayload {
+  trackId: string;
   playlistId: string;
 }
 
@@ -56,6 +70,16 @@ export interface DeletePlaylist {
   payload: DeletePlaylistPayload;
 }
 
+export interface AddToPlaylist {
+  type: typeof ADD_TO_PLAYLIST;
+  payload: AddToPlaylistPayload;
+}
+
+export interface RemoveFromPlaylist {
+  type: typeof REMOVE_FROM_PLAYLIST;
+  payload: RemoveFromPlaylistPayload;
+}
+
 export const loadPlaylistTracksAction = (payload: LoadPlaylistTracksPayload): LoadPlaylistTracks => ({
   type: LOAD_PLAYLIST_TRACKS,
   payload,
@@ -77,6 +101,16 @@ export const loadPlaylistInfoAction = (payload: LoadPlaylistInfoPayload): LoadPl
 
 export const deletePlaylistAction = (payload: DeletePlaylistPayload): DeletePlaylist => ({
   type: DELETE_PLAYLIST,
+  payload,
+});
+
+export const addToPlaylistAction = (payload: AddToPlaylistPayload): AddToPlaylist => ({
+  type: ADD_TO_PLAYLIST,
+  payload,
+});
+
+export const removeFromPlaylistAction = (payload: RemoveFromPlaylistPayload): RemoveFromPlaylist => ({
+  type: REMOVE_FROM_PLAYLIST,
   payload,
 });
 
@@ -107,10 +141,24 @@ function* deletePlaylistWatcher({ payload }: DeletePlaylist) {
   yield deletePlaylistApiCall(playlistId);
 }
 
+function* addToPlaylistWatcher({ payload }: AddToPlaylist) {
+  const { trackId, playlistId } = payload;
+
+  yield addToPlaylistApiCall(trackId, playlistId);
+}
+
+function* removeFromPlaylistWatcher({ payload }: RemoveFromPlaylist) {
+  const { trackId, playlistId } = payload;
+
+  yield removeFromPlaylistApiCall(trackId, playlistId);
+}
+
 export default function* contentSaga() {
   yield takeLatest(LOAD_PLAYLIST_TRACKS, loadPlaylistTracksWatcher);
   yield takeLatest(LOAD_RECOMMENDED_TRACKS, loadRecommendedTracksWatcher);
   yield takeLatest(CREATE_NEW_PLAYLIST, createNewPlaylistWatcher);
   yield takeLatest(LOAD_PLAYLIST_INFO, loadPlaylistInfoWatcher);
   yield takeLatest(DELETE_PLAYLIST, deletePlaylistWatcher);
+  yield takeLatest(ADD_TO_PLAYLIST, addToPlaylistWatcher);
+  yield takeLatest(REMOVE_FROM_PLAYLIST, removeFromPlaylistWatcher);
 }

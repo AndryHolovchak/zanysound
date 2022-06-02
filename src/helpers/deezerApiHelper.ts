@@ -65,3 +65,10 @@ export function* createNewPlaylistApiCall(title: string) {
 export function* deletePlaylistApiCall(id: string) {
   yield deezerApiRequest(FetchPostMessageType.DeletePlaylist, `/playlist/${id}`, {}, RequestType.Delete);
 }
+
+export function* addToPlaylistApiCall(trackId: string, playlistId: string) {
+  yield deezerApiRequest(FetchPostMessageType.AddToPlaylist, `/playlist/${playlistId}/tracks`, { songs: [trackId] }, RequestType.Post);
+}
+export function* removeFromPlaylistApiCall(trackId: string, playlistId: string) {
+  yield deezerApiRequest(FetchPostMessageType.RemoveFromPlaylist, `/playlist/${playlistId}/tracks`, { songs: [trackId] }, RequestType.Delete);
+}

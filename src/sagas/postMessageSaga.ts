@@ -1,4 +1,4 @@
-import { loadPlaylistInfoAction } from "./contentSaga";
+import { loadPlaylistInfoAction, loadPlaylistTracksAction } from "./contentSaga";
 import { copyObject, generateId } from "./../utils/common";
 import { getPlaylistTracks } from "./../helpers/deezerApiHelper";
 import { Playlists, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
@@ -71,6 +71,10 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
         break;
       case FetchPostMessageType.DeletePlaylist:
         yield handleDeletePlaylistResponse(initiator, response);
+        break;
+      case FetchPostMessageType.AddToPlaylist:
+      case FetchPostMessageType.RemoveFromPlaylist:
+        yield handlePlaylistTracksChangeResponse(initiator, response);
         break;
     }
   } else if (initiator.type === PostMessageType.Mp3) {
@@ -184,6 +188,19 @@ function* handleMp3Response(response: any) {
     })
   );
   yield put(setVideoId({ trackId, videoId }));
+}
+
+function* handlePlaylistTracksChangeResponse(initiator: PostMessage, response: any) {
+  if (response && !response.error) {
+    const payload = initiator.payload as PostMessageFetchPayload;
+    const url = new URL(payload.url);
+    const playlistId = url.pathname.split("/")[2];
+    console.log(playlistId);
+
+    yield put(loadPlaylistTracksAction({ playlistId }));
+  } else {
+    //TODO: show error message
+  }
 }
 
 export default function* poseMessageSaga() {

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import classNames from "classnames";
-import { TrackModel } from "../../commonTypes/deezerTypes";
+import { PlaylistModel, TrackModel } from "../../commonTypes/deezerTypes";
 import Track from "../Track/Track";
 import style from "./tracklist.module.sass";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -12,9 +12,10 @@ export interface TracklistProps {
   id: string;
   tracks: TrackModel[];
   className?: string;
+  parentPlaylist?: PlaylistModel;
 }
 
-const Tracklist: React.FC<TracklistProps> = ({ id, tracks, className }) => {
+const Tracklist: React.FC<TracklistProps> = ({ id, tracks, className, parentPlaylist }) => {
   const player = useContext(PlayerContext);
 
   const finalClassName = classNames([style.tracklist, className]);
@@ -43,6 +44,7 @@ const Tracklist: React.FC<TracklistProps> = ({ id, tracks, className }) => {
       <div className={style.tracklist__inner}>
         {tracks.map((e) => (
           <Track
+            parentPlaylist={parentPlaylist}
             playing={player.track?.id === e.id}
             key={e.id}
             liked={likedTracksIds.includes(e.id)}

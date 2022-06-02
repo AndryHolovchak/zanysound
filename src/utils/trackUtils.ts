@@ -14,7 +14,8 @@ export const isExpired = (url: string) => {
   const expireDate = urlObject.searchParams.get("expire");
 
   if (expireDate) {
-    return new Date(+expireDate) <= new Date();
+    const expireDateMs = +expireDate * 1000;
+    return expireDateMs <= Date.now();
   }
 
   return true;

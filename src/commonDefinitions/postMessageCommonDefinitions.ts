@@ -14,4 +14,6 @@ export enum FetchPostMessageType {
   LoadRecommendedTracks,
   CreateNewPlaylist,
   DeletePlaylist,
+  AddToPlaylist,
+  RemoveFromPlaylist,
 }

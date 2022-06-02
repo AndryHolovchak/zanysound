@@ -9,12 +9,13 @@ import { PlaylistPreview } from "../../components/PlaylistPreview/PlaylistPrevie
 import ScreenContainer from "../../components/ScreenContainer/ScreenContainer";
 import { createNewPlaylistAction } from "../../sagas/contentSaga";
 import { selectPlaylists } from "../../slices/contentSlice";
+import { sortPlaylistsByDate } from "../../utils/sortingUtils";
 import styles from "./collectionScreen.module.sass";
 
 export const CollectionScreen = () => {
   const [showNewPlaylistModal, setShowNewPlaylistModal] = useState(false);
   const playlistsCollection: Playlists = useAppSelector(selectPlaylists);
-  const playlists = Object.values(playlistsCollection).sort((a, b) => +new Date(b.creationDate) - +new Date(a.creationDate));
+  const playlists = Object.values(playlistsCollection).sort(sortPlaylistsByDate);
 
   return (
     <ScreenContainer>

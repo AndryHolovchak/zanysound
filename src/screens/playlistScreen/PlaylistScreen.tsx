@@ -14,7 +14,9 @@ export const PlaylistScreen = () => {
   const playlistsTracks = useAppSelector(selectPlaylistsTracks);
 
   useEffect(() => {
+    // if (!playlistsTracks[id]) {
     dispatch(loadPlaylistTracksAction({ playlistId: id }));
+    // }
   }, [id]);
 
   const targetTracks = playlistsTracks[id];
@@ -22,7 +24,7 @@ export const PlaylistScreen = () => {
   return (
     <ScreenContainer>
       <div className={styles.playlist_screen}>
-        <Tracklist tracks={targetTracks || []} id={id} />
+        <Tracklist tracks={targetTracks || []} id={id} parentPlaylist={playlists[id]} />
       </div>
     </ScreenContainer>
   );

@@ -1,0 +1,39 @@
+@import '../../styles'
+
+.popup_menu
+  position: relative
+
+  &__icon
+    font-size: 3vh
+
+  &__items
+    display: none
+    position: absolute
+    bottom: 0
+    left: 0
+    transform: translate(-100%, 100%)
+    backdrop-filter: blur(6px)
+    background-color: #82bb942e
+    border-radius: 8px
+
+  &__items:active
+    display: block
+
+  &__icon:active + &__items
+    display: block
+
+  &__icon:hover + &__items
+    display: block 
+
+  &__item
+    width: 60vw
+    padding: 2vh
+
+    & + &
+      border-top: 1px solid #ffffff1c
+
+  &__item_icon
+    margin-right: 2vh
+
+  &__item_text
+    color: #fff
