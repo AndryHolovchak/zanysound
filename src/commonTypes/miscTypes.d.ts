@@ -22,3 +22,15 @@ export interface Playlists {
 export interface PlaylistsTracks {
   [playlistId: string]: TrackModel[];
 }
+
+export interface NotificationsCollection {
+  [id: string]: Notification;
+}
+
+export type Notification = {
+  id: string;
+  title: string;
+  text?: string;
+  timestamp: number;
+  lifetime: number;
+};

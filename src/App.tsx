@@ -15,6 +15,9 @@ import { deezerApiRequest } from "./helpers/deezerApiHelper";
 import { CallbackScreen } from "./screens/callbackScreen/CallbackScreen";
 import { handlePostMessageAction } from "./sagas/postMessageSaga";
 import { PlayerContextProvider } from "./components/PlayerContextProvider/PlayerContextProvider";
+import { createNotificationItem } from "./utils/common";
+import { addNotification } from "./slices/notificationSlice";
+import { NotificationHub } from "./components/NotificationsHub/NotificationHub";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -61,6 +64,7 @@ function App() {
     return (
       <div className="App">
         <BrowserRouter>
+          <NotificationHub />
           <Switch>
             <Route exact path="/cb">
               <CallbackScreen />
@@ -78,6 +82,7 @@ function App() {
     <div className="App">
       <PlayerContextProvider>
         <BrowserRouter>
+          <NotificationHub />
           <Switch>
             <Route exact path="/" render={() => <Redirect to="/liked" />} />
             <Route exact path="/liked">

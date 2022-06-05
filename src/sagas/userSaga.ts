@@ -71,42 +71,12 @@ function* loadUserPlaylistsWatcher(): any {
 
 function* addTrackToLikedWatcher({ payload }: AddTrackToLiked) {
   const { track } = payload;
-  const likedTracks: TrackModel[] = yield select(selectLikedTracks);
-  const likedTracksIds: string[] = yield select(selectLikedTracksIds);
-
-  yield put(changeLikedTracks([track, ...likedTracks]));
-  yield put(changeLikedTracksIds([track.id, ...likedTracksIds]));
-
-  yield addTrackToLikedApiCall(track.id);
+  yield addTrackToLikedApiCall(track);
 }
 
 function* removeTrackFromLikedWatcher({ payload }: RemoveTrackFromLiked) {
   const { track } = payload;
-  const likedTracks: TrackModel[] = yield select(selectLikedTracks);
-  const likedTracksIds: string[] = yield select(selectLikedTracksIds);
-
-  const trackIndex = likedTracks.indexOf(track);
-  const trackIdIndex = likedTracksIds.indexOf(track.id);
-
-  if (trackIndex === -1 && trackIdIndex === -1) {
-    console.log("ERROR: The track is not liked");
-    return;
-  }
-
-  if ((trackIndex === -1 && trackIdIndex !== -1) || (trackIdIndex === -1 && trackIndex !== -1)) {
-    throw new Error("track ids sync error");
-  }
-
-  const newLiked = Array.from(likedTracks);
-  const newLikedIds = Array.from(likedTracksIds);
-
-  newLiked.splice(trackIndex, 1);
-  newLikedIds.splice(trackIdIndex, 1);
-
-  yield put(changeLikedTracks([...newLiked]));
-  yield put(changeLikedTracksIds([...newLikedIds]));
-
-  yield removeTrackFromLikedApiCall(track.id);
+  yield removeTrackFromLikedApiCall(track);
 }
 
 export default function* userSaga() {

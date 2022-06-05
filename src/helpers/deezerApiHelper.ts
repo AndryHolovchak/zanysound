@@ -5,16 +5,25 @@ import { store } from "../app/store";
 import { selectDeezerToken } from "../slices/deezerSlice";
 import { object2queryParams } from "./../utils/urlUtils";
 import { RequestType } from "../commonDefinitions/miscCommonDefinitions";
+import { TrackModel } from "../commonTypes/deezerTypes";
 
 const API_URL = "https://api.deezer.com";
 
-export function* deezerApiRequest(type: FetchPostMessageType, path: string, queryParams: object = {}, method = RequestType.Get, body: any = {}) {
+export function* deezerApiRequest(
+  type: FetchPostMessageType,
+  path: string,
+  queryParams: object = {},
+  method = RequestType.Get,
+  body: any = {},
+  metainfo?: any
+) {
   const token: string = yield select(selectDeezerToken);
   const params = object2queryParams(Object.assign(queryParams, { access_token: token }));
   const generatedPath = API_URL + path + params;
   const finallBody = method === RequestType.Get ? undefined : body;
 
   yield sendPostMessage({
+    metainfo,
     type: PostMessageType.Fetch,
     payload: {
       type,
@@ -46,12 +55,12 @@ export function* searchTrackApiCall(query: string, index: number = 0) {
   yield deezerApiRequest(FetchPostMessageType.SearchTrack, `/search?q=${encodedQuery}&strict=off&order=RANKING&index=${index}`);
 }
 
-export function* addTrackToLikedApiCall(id: string) {
-  yield deezerApiRequest(FetchPostMessageType.AddTrackToLiked, `/user/me/tracks`, { track_id: id }, RequestType.Post);
+export function* addTrackToLikedApiCall(track: TrackModel) {
+  yield deezerApiRequest(FetchPostMessageType.AddTrackToLiked, `/user/me/tracks`, { track_id: track.id }, RequestType.Post, {}, { track });
 }
 
-export function* removeTrackFromLikedApiCall(id: string) {
-  yield deezerApiRequest(FetchPostMessageType.RemoveTrackFromLiked, `/user/me/tracks`, { track_id: id }, RequestType.Delete);
+export function* removeTrackFromLikedApiCall(track: TrackModel) {
+  yield deezerApiRequest(FetchPostMessageType.RemoveTrackFromLiked, `/user/me/tracks`, { track_id: track.id }, RequestType.Delete, {}, { track });
 }
 
 export function* loadRecommendedTracksApiCall() {
