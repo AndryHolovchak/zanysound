@@ -29,8 +29,6 @@ const Track: React.FC<TrackProps> = ({ model, liked, playing, className, onClick
   const finalClassName = classNames([style.track, className, playing && style["track--playing"]]);
 
   const handleLikeClick = (e: React.MouseEvent<HTMLElement>) => {
-    e.stopPropagation();
-
     if (liked) {
       dispatch(removeTrackFromLikedAction({ track: model }));
     } else {

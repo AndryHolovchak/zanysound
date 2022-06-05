@@ -16,15 +16,25 @@ export function* sendPostMessage(message: PostMessage): any {
       "Content-Type": "application/json",
     };
 
-    const response: Response = yield fetch(backendUrl, { method: "POST", body: JSON.stringify(message), headers });
-    const json: any = yield response.json();
+    try {
+      const response: Response = yield fetch(backendUrl, { method: "POST", body: JSON.stringify(message), headers });
+      const json: any = yield response.json();
 
-    yield put(
-      handlePostMessageAction({
-        message: {
-          data: JSON.stringify({ initiator: message, response: json }),
-        } as MessageEvent,
-      })
-    );
+      yield put(
+        handlePostMessageAction({
+          message: {
+            data: JSON.stringify({ initiator: message, response: json }),
+          } as MessageEvent,
+        })
+      );
+    } catch (e: any) {
+      yield put(
+        handlePostMessageAction({
+          message: {
+            data: JSON.stringify({ initiator: message, response: {}, networkError: true }),
+          } as MessageEvent,
+        })
+      );
+    }
   }
 }

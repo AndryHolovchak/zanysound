@@ -1,5 +1,6 @@
+import { selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
 import { loadPlaylistInfoAction, loadPlaylistTracksAction } from "./contentSaga";
-import { copyObject, generateId } from "./../utils/common";
+import { copyObject, createNotificationItem, generateId } from "./../utils/common";
 import { getPlaylistTracks } from "./../helpers/deezerApiHelper";
 import { Playlists, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
 import { selectPlaylists, changePlaylists, selectPlaylistsTracks, changePlaylistsTracks, changeRecommendedTracks } from "./../slices/contentSlice";
@@ -9,11 +10,10 @@ import { PostMessageType, FetchPostMessageType } from "./../commonDefinitions/po
 import { PostMessage, PostMessageFetchPayload, PostMessageResponse } from "./../commonTypes/postMessageTypes";
 import { parseTrack } from "../helpers/deezerDataHelper";
 import { put, select, takeLatest } from "redux-saga/effects";
-import { searchTrackApiCall } from "../helpers/deezerApiHelper";
 import { changeSearchResult, changeSearchResultId } from "../slices/searchSlice";
-import { isLiked } from "../utils/trackUtils";
 import { changeLikedTracks, changeLikedTracksIds } from "../slices/userSlice";
 import { setMp3Url, setVideoId } from "../slices/mp3Slice";
+import { addNotification } from "../slices/notificationSlice";
 
 const HANDLE_POST_MESSAGE = "postMessage/handle";
 
@@ -35,9 +35,14 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
   const { message } = payload;
 
   const parsed: PostMessageResponse = JSON.parse(message.data);
+  const { initiator, response } = parsed;
+  const networkError = parsed.networkError;
 
-  const initiator = parsed.initiator;
-  const response = parsed.response;
+  if (networkError) {
+    console.log("Network Error");
+    yield put(addNotification(createNotificationItem("Error", "No internet connection")));
+    return;
+  }
 
   //hande fetch response
   if (initiator.type === PostMessageType.Fetch) {
@@ -59,10 +64,6 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
       case FetchPostMessageType.SearchTrack:
         yield handleSearchTrack(response.data);
         break;
-      case FetchPostMessageType.AddTrackToLiked:
-      case FetchPostMessageType.RemoveTrackFromLiked:
-        //Nothing to handle so far
-        break;
       case FetchPostMessageType.LoadRecommendedTracks:
         yield handleLoadRecomendedTracks(response.data);
         break;
@@ -75,6 +76,12 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
       case FetchPostMessageType.AddToPlaylist:
       case FetchPostMessageType.RemoveFromPlaylist:
         yield handlePlaylistTracksChangeResponse(initiator, response);
+        break;
+      case FetchPostMessageType.AddTrackToLiked:
+        yield handleAddToLikedResponse(initiator);
+        break;
+      case FetchPostMessageType.RemoveTrackFromLiked:
+        yield handleRemoveFromLikedResponse(initiator);
         break;
     }
   } else if (initiator.type === PostMessageType.Mp3) {
@@ -199,8 +206,55 @@ function* handlePlaylistTracksChangeResponse(initiator: PostMessage, response: a
 
     yield put(loadPlaylistTracksAction({ playlistId }));
   } else {
-    //TODO: show error message
+    yield put(addNotification(createNotificationItem("Track is already in this playlist")));
   }
+}
+
+function* handleAddToLikedResponse(initiator: PostMessage) {
+  const track = initiator.metainfo?.track;
+
+  if (track) {
+    const likedTracks: TrackModel[] = yield select(selectLikedTracks);
+    const likedTracksIds: string[] = yield select(selectLikedTracksIds);
+
+    yield put(changeLikedTracks([track, ...likedTracks]));
+    yield put(changeLikedTracksIds([track.id, ...likedTracksIds]));
+  } else {
+    console.error("There is no track in metainfo object");
+  }
+}
+
+function* handleRemoveFromLikedResponse(initiator: PostMessage) {
+  const track = initiator.metainfo?.track;
+
+  if (!track) {
+    console.error("There is no track in metainfo object");
+    return;
+  }
+
+  const likedTracks: TrackModel[] = yield select(selectLikedTracks);
+  const likedTracksIds: string[] = yield select(selectLikedTracksIds);
+
+  const trackIndex = likedTracks.findIndex((e) => e.id === track.id);
+  const trackIdIndex = likedTracksIds.indexOf(track.id);
+
+  if (trackIndex === -1 && trackIdIndex === -1) {
+    console.log("ERROR: The track is not liked");
+    return;
+  }
+
+  if ((trackIndex === -1 && trackIdIndex !== -1) || (trackIdIndex === -1 && trackIndex !== -1)) {
+    throw new Error("track ids sync error");
+  }
+
+  const newLiked = Array.from(likedTracks);
+  const newLikedIds = Array.from(likedTracksIds);
+
+  newLiked.splice(trackIndex, 1);
+  newLikedIds.splice(trackIdIndex, 1);
+
+  yield put(changeLikedTracks([...newLiked]));
+  yield put(changeLikedTracksIds([...newLikedIds]));
 }
 
 export default function* poseMessageSaga() {

@@ -10,10 +10,12 @@ import userSlice from "../slices/userSlice";
 import mp3Slice from "./../slices/mp3Slice";
 import playerSlice from "./../slices/playerSlice";
 import contentSlice from "./../slices/contentSlice";
+import notificationSlice from "../slices/notificationSlice";
 
 const persistConfig = {
   key: "persist-root",
   storage,
+  blacklist: ["notification"],
 };
 
 const rootReducer = combineReducers({
@@ -24,6 +26,7 @@ const rootReducer = combineReducers({
   mp3: mp3Slice,
   player: playerSlice,
   content: contentSlice,
+  notification: notificationSlice,
 });
 
 const sagaMiddleware = createSagaMiddleware();
