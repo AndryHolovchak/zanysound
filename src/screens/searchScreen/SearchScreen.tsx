@@ -4,7 +4,7 @@ import Icon from "../../components/Icon/Icon";
 import ScreenContainer from "../../components/ScreenContainer/ScreenContainer";
 import Tracklist from "../../components/Tracklist/Tracklist";
 import { searchTrack } from "../../sagas/searchSaga";
-import { selectSearchResult, selectSearchResultId } from "../../slices/searchSlice";
+import { changeSearchResult, selectSearchResult, selectSearchResultId } from "../../slices/searchSlice";
 import style from "./searchScreen.module.sass";
 
 const SearchScreen: React.FC = () => {
@@ -26,6 +26,7 @@ const SearchScreenInput = () => {
   const [value, setValue] = useState("");
 
   const handleSearch = () => {
+    dispatch(changeSearchResult([]));
     dispatch(searchTrack({ query: value, startIndex: 0 }));
   };
 

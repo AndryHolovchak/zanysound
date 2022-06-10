@@ -18,6 +18,7 @@ import { PlayerContextProvider } from "./components/PlayerContextProvider/Player
 import { createNotificationItem } from "./utils/common";
 import { addNotification } from "./slices/notificationSlice";
 import { NotificationHub } from "./components/NotificationsHub/NotificationHub";
+import { ProfileScreen } from "./screens/profileScreen/ProfileScreen";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -96,6 +97,9 @@ function App() {
             </Route>
             <Route exact path="/recommended">
               <RecommendedScreen />
+            </Route>
+            <Route exact path="/profile">
+              <ProfileScreen />
             </Route>
             <Route exact path="/playlist/:id">
               <PlaylistScreen />
