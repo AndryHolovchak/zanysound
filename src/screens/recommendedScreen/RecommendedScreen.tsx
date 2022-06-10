@@ -4,14 +4,16 @@ import ScreenContainer from "../../components/ScreenContainer/ScreenContainer";
 import Tracklist from "../../components/Tracklist/Tracklist";
 import { loadRecommendedTracksAction } from "../../sagas/contentSaga";
 import { selectRecommendedTracks } from "../../slices/contentSlice";
-import styles from "./RecommendedScreen.module.scss";
+import styles from "./RecommendedScreen.module.sass";
 
 export const RecommendedScreen = () => {
   const dispatch = useAppDispatch();
   const tracks = useAppSelector(selectRecommendedTracks);
 
   useEffect(() => {
-    dispatch(loadRecommendedTracksAction());
+    if (!tracks.length) {
+      dispatch(loadRecommendedTracksAction({ startIndex: 0 }));
+    }
   }, []);
 
   if (!tracks?.length) {

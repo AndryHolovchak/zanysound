@@ -29,10 +29,13 @@ export const contentSlice = createSlice({
     changeRecommendedTracks: (state, action: PayloadAction<TrackModel[]>) => {
       state.recommendedTracks = [...action.payload];
     },
+    addRecommendedTracks: (state, action: PayloadAction<TrackModel[]>) => {
+      state.recommendedTracks = [...state.recommendedTracks, ...action.payload];
+    },
   },
 });
 
-export const { changePlaylists, changePlaylistsTracks, changeRecommendedTracks } = contentSlice.actions;
+export const { changePlaylists, changePlaylistsTracks, changeRecommendedTracks, addRecommendedTracks } = contentSlice.actions;
 
 export const selectPlaylists = (state: RootState) => state.content.playlists;
 export const selectPlaylistsTracks = (state: RootState) => state.content.playlistsTracks;
