@@ -17,7 +17,10 @@ export const searchSlice = createSlice({
   initialState,
   reducers: {
     changeSearchResult: (state, action: PayloadAction<TrackModel[]>) => {
-      state.result = action.payload;
+      state.result = [...action.payload];
+    },
+    addSearchResult: (state, action: PayloadAction<TrackModel[]>) => {
+      state.result = [...state.result, ...action.payload];
     },
     changeSearchResultId: (state, action: PayloadAction<string>) => {
       state.resultId = action.payload;
@@ -25,7 +28,7 @@ export const searchSlice = createSlice({
   },
 });
 
-export const { changeSearchResult, changeSearchResultId } = searchSlice.actions;
+export const { changeSearchResult, changeSearchResultId, addSearchResult } = searchSlice.actions;
 
 export const selectSearchResult = (state: RootState) => state.search.result;
 export const selectSearchResultId = (state: RootState) => state.search.resultId;

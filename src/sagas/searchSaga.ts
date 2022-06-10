@@ -8,6 +8,7 @@ export const SEARCH_TRACK = "search/track";
 
 export interface SearchTrackPayload {
   query: string;
+  startIndex: number;
 }
 
 export interface SearchTrack {
@@ -21,8 +22,9 @@ export const searchTrack = (payload: SearchTrackPayload): SearchTrack => ({
 });
 
 export function* searchTrackWatcher({ payload }: SearchTrack): any {
-  const { query } = payload;
-  yield searchTrackApiCall(query);
+  const { query, startIndex } = payload;
+
+  yield searchTrackApiCall(query, startIndex);
 }
 
 export default function* searchSaga() {

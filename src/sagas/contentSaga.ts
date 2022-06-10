@@ -28,6 +28,10 @@ export interface LoadPlaylistTracksPayload {
   playlistId: string;
 }
 
+export interface LoadRecommendedTracksPayload {
+  startIndex: number;
+}
+
 export interface CreateNewPlaylistPayload {
   title: string;
 }
@@ -53,6 +57,11 @@ export interface RemoveFromPlaylistPayload {
 export interface LoadPlaylistTracks {
   type: typeof LOAD_PLAYLIST_TRACKS;
   payload: LoadPlaylistTracksPayload;
+}
+
+export interface LoadRecommendedTracks {
+  type: typeof LOAD_RECOMMENDED_TRACKS;
+  payload: LoadRecommendedTracksPayload;
 }
 
 export interface CreateNewPlaylist {
@@ -85,8 +94,9 @@ export const loadPlaylistTracksAction = (payload: LoadPlaylistTracksPayload): Lo
   payload,
 });
 
-export const loadRecommendedTracksAction = () => ({
+export const loadRecommendedTracksAction = (payload: LoadRecommendedTracksPayload): LoadRecommendedTracks => ({
   type: LOAD_RECOMMENDED_TRACKS,
+  payload,
 });
 
 export const createNewPlaylistAction = (payload: CreateNewPlaylistPayload): CreateNewPlaylist => ({
@@ -119,8 +129,10 @@ function* loadPlaylistTracksWatcher({ payload }: LoadPlaylistTracks): any {
   yield getPlaylistTracks(playlistId);
 }
 
-function* loadRecommendedTracksWatcher(): any {
-  yield loadRecommendedTracksApiCall();
+function* loadRecommendedTracksWatcher({ payload }: LoadRecommendedTracks): any {
+  const { startIndex } = payload;
+
+  yield loadRecommendedTracksApiCall(startIndex);
 }
 
 function* createNewPlaylistWatcher({ payload }: CreateNewPlaylist) {

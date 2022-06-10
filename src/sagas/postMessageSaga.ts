@@ -1,9 +1,17 @@
 import { selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
-import { loadPlaylistInfoAction, loadPlaylistTracksAction } from "./contentSaga";
+import { loadPlaylistInfoAction, loadPlaylistTracksAction, loadRecommendedTracksAction } from "./contentSaga";
 import { copyObject, createNotificationItem, generateId } from "./../utils/common";
 import { getPlaylistTracks } from "./../helpers/deezerApiHelper";
 import { Playlists, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
-import { selectPlaylists, changePlaylists, selectPlaylistsTracks, changePlaylistsTracks, changeRecommendedTracks } from "./../slices/contentSlice";
+import {
+  selectPlaylists,
+  changePlaylists,
+  selectPlaylistsTracks,
+  changePlaylistsTracks,
+  changeRecommendedTracks,
+  selectRecommendedTracks,
+  addRecommendedTracks,
+} from "./../slices/contentSlice";
 import { parsePlaylist } from "./../helpers/deezerDataHelper";
 import { PlaylistModel, TrackModel } from "./../commonTypes/deezerTypes.d";
 import { PostMessageType, FetchPostMessageType } from "./../commonDefinitions/postMessageCommonDefinitions";
@@ -14,6 +22,7 @@ import { changeSearchResult, changeSearchResultId } from "../slices/searchSlice"
 import { changeLikedTracks, changeLikedTracksIds } from "../slices/userSlice";
 import { setMp3Url, setVideoId } from "../slices/mp3Slice";
 import { addNotification } from "../slices/notificationSlice";
+import config from "../config/config";
 
 const HANDLE_POST_MESSAGE = "postMessage/handle";
 
@@ -147,13 +156,20 @@ function* handleGetPlaylistInfo(response: any) {
 }
 
 function* handleSearchTrack(response: any[]) {
-  yield put(changeSearchResult(response.map((e: any) => parseTrack(e))));
   yield put(changeSearchResultId(generateId()));
+
+  yield put(changeSearchResult(response.map((e: any) => parseTrack(e))));
 }
 
 function* handleLoadRecomendedTracks(response: any[]) {
   const parsedTracks: TrackModel[] = response.map((t) => parseTrack(t));
-  yield put(changeRecommendedTracks(parsedTracks));
+  yield put(addRecommendedTracks(parsedTracks));
+
+  const recommendedTracks: TrackModel[] = yield select(selectRecommendedTracks);
+
+  if (recommendedTracks.length < config.NUMBER_OF_RECOMMENDED_TRACKS) {
+    yield put(loadRecommendedTracksAction({ startIndex: recommendedTracks.length }));
+  }
 }
 
 function* handleCreateNewPlaylistResponse(response: any) {

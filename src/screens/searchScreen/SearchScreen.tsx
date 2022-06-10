@@ -26,7 +26,7 @@ const SearchScreenInput = () => {
   const [value, setValue] = useState("");
 
   const handleSearch = () => {
-    dispatch(searchTrack({ query: value }));
+    dispatch(searchTrack({ query: value, startIndex: 0 }));
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
