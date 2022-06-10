@@ -5,6 +5,7 @@ import PlayerContext from "../../contexts/playerContext";
 import { selectPlayerPaused, selectPlayerTrack } from "../../slices/playerSlice";
 import Icon from "../Icon/Icon";
 import { IconType } from "../Icon/iconCommonDefinition";
+import { ProgressBar } from "../ProgressBar/ProgressBar";
 import styles from "./player.module.sass";
 
 export const Player = () => {
@@ -37,19 +38,6 @@ export const Player = () => {
           <img src="/icons/shuffle.svg" className={shuffleClassName} onClick={playerContext.toggleShuffle} />
         </div>
       </div>
-    </div>
-  );
-};
-
-const ProgressBar = () => {
-  const playerContext = useContext(PlayerContext);
-  const duration = playerContext.duration || 0;
-  const progress = playerContext.progress || 0;
-
-  return (
-    <div className={styles.progress_bar}>
-      <div className={styles.progress_bar__progress}>{progress.toFixed(2)}</div>
-      <div className={styles.progress_bar__duration}>{duration.toFixed(2)}</div>
     </div>
   );
 };
