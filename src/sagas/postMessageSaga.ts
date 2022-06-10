@@ -1,4 +1,5 @@
-import { selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
+import { searchTrack } from "./searchSaga";
+import { changeUserEmail, changeUserName, changeUserPicture, selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
 import { loadPlaylistInfoAction, loadPlaylistTracksAction, loadRecommendedTracksAction } from "./contentSaga";
 import { copyObject, createNotificationItem, generateId } from "./../utils/common";
 import { getPlaylistTracks } from "./../helpers/deezerApiHelper";
@@ -18,7 +19,7 @@ import { PostMessageType, FetchPostMessageType } from "./../commonDefinitions/po
 import { PostMessage, PostMessageFetchPayload, PostMessageResponse } from "./../commonTypes/postMessageTypes";
 import { parseTrack } from "../helpers/deezerDataHelper";
 import { put, select, takeLatest } from "redux-saga/effects";
-import { changeSearchResult, changeSearchResultId } from "../slices/searchSlice";
+import { addSearchResult, changeSearchResult, changeSearchResultId, selectSearchResult } from "../slices/searchSlice";
 import { changeLikedTracks, changeLikedTracksIds } from "../slices/userSlice";
 import { setMp3Url, setVideoId } from "../slices/mp3Slice";
 import { addNotification } from "../slices/notificationSlice";
@@ -59,7 +60,7 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
 
     switch (initiatorPayload.type) {
       case FetchPostMessageType.GetUserInfo:
-        yield handleGetUserInfo(response.data);
+        yield handleGetUserInfo(response);
         break;
       case FetchPostMessageType.GetUserPlaylists:
         yield handleGetUserPlaylist(response.data);
@@ -71,7 +72,7 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
         yield handleGetPlaylistInfo(response);
         break;
       case FetchPostMessageType.SearchTrack:
-        yield handleSearchTrack(response.data);
+        yield handleSearchTrack(initiator, response);
         break;
       case FetchPostMessageType.LoadRecommendedTracks:
         yield handleLoadRecomendedTracks(response.data);
@@ -98,7 +99,14 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
   }
 }
 
-function* handleGetUserInfo(response: any) {}
+function* handleGetUserInfo(response: any) {
+  console.log(response);
+  const { name, email, picture_xl } = response;
+
+  yield put(changeUserName(name));
+  yield put(changeUserEmail(email));
+  yield put(changeUserPicture(picture_xl));
+}
 
 function* handleGetUserPlaylist(response: any[]) {
   const receivedPlaylists: PlaylistModel[] = [];
@@ -155,10 +163,20 @@ function* handleGetPlaylistInfo(response: any) {
   yield put(changePlaylistsTracks({ ...playlistsTracks, [parsedPlaylist.id]: parsedTracks }));
 }
 
-function* handleSearchTrack(response: any[]) {
-  yield put(changeSearchResultId(generateId()));
+function* handleSearchTrack(initiator: PostMessage, response: any) {
+  const searchResult: TrackModel[] = yield select(selectSearchResult);
 
-  yield put(changeSearchResult(response.map((e: any) => parseTrack(e))));
+  if (!searchResult.length) {
+    yield put(changeSearchResultId(generateId()));
+  }
+
+  yield put(addSearchResult(response.data.map((e: any) => parseTrack(e))));
+
+  const numberOfTracks = searchResult.length + response.data.length;
+
+  if (numberOfTracks < config.NUMBER_OF_SEARCH_TRACKS && numberOfTracks < response.total) {
+    yield put(searchTrack({ query: initiator.metainfo?.query, startIndex: numberOfTracks }));
+  }
 }
 
 function* handleLoadRecomendedTracks(response: any[]) {

@@ -16,10 +16,6 @@ export const RecommendedScreen = () => {
     }
   }, []);
 
-  if (!tracks?.length) {
-    return <span>Recommended tracks not loaded yey</span>;
-  }
-
   return (
     <ScreenContainer>
       <div className={styles.recommended_screen}>

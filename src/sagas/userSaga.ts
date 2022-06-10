@@ -2,7 +2,7 @@ import { changePlaylistsTracks, selectPlaylists, selectPlaylistsTracks } from ".
 import { logWarning } from "./../helpers/dev";
 import { Playlists, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
 import { selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
-import { addTrackToLikedApiCall, getPlaylistTracks, removeTrackFromLikedApiCall } from "./../helpers/deezerApiHelper";
+import { addTrackToLikedApiCall, getPlaylistTracks, getUserInfo, removeTrackFromLikedApiCall } from "./../helpers/deezerApiHelper";
 import { parsePlaylist } from "./../helpers/deezerDataHelper";
 import { PlaylistModel, TrackModel } from "./../commonTypes/deezerTypes.d";
 import { parseTrack } from "../helpers/deezerDataHelper";
@@ -61,8 +61,9 @@ export const removeTrackFromLikedAction = (payload: RemoveTrackFromLikedPayload)
   payload,
 });
 
-function* loadBasicUserInfoWatcher(): any {
+function* loadBasicUserInfoWatcher() {
   yield put(loadUserPlaylists());
+  yield getUserInfo();
 }
 
 function* loadUserPlaylistsWatcher(): any {

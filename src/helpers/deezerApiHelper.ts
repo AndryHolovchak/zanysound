@@ -34,9 +34,9 @@ export function* deezerApiRequest(
   });
 }
 
-export const getUserInfo = async () => {
-  await deezerApiRequest(FetchPostMessageType.GetUserInfo, "/user/me");
-};
+export function* getUserInfo() {
+  yield deezerApiRequest(FetchPostMessageType.GetUserInfo, "/user/me");
+}
 
 export function* getUserPlaylists() {
   yield deezerApiRequest(FetchPostMessageType.GetUserPlaylists, "/user/me/playlists");
@@ -52,7 +52,14 @@ export function* getPlaylistInfoApiCall(id: string) {
 
 export function* searchTrackApiCall(query: string, startIndex: number) {
   let encodedQuery = encodeURIComponent(query);
-  yield deezerApiRequest(FetchPostMessageType.SearchTrack, `/search?q=${encodedQuery}&strict=off&order=RANKING&index=${startIndex}`);
+  yield deezerApiRequest(
+    FetchPostMessageType.SearchTrack,
+    `/search?q=${encodedQuery}&strict=off&order=RANKING&index=${startIndex}`,
+    {},
+    RequestType.Get,
+    {},
+    { query }
+  );
 }
 
 export function* addTrackToLikedApiCall(track: TrackModel) {
