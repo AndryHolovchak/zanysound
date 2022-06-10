@@ -1,3 +1,4 @@
+import { PlayerReadyState } from "./../commonDefinitions/playerCommonDefinitions";
 import { TrackModel } from "./deezerTypes.d";
 
 export interface PlayerContextValue {
@@ -8,8 +9,10 @@ export interface PlayerContextValue {
   track: TrackModel | null;
   duration: number;
   progress: number;
+  readyState: PlayerReadyState;
   next: () => void;
   previous: () => void;
+  seek: (time: number) => void;
   togglePlay: () => void;
   toggleRepeat: () => void;
   toggleShuffle: () => void;

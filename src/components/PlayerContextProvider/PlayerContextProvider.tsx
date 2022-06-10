@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { PlayerReadyState } from "../../commonDefinitions/playerCommonDefinitions";
 import { PostMessageType } from "../../commonDefinitions/postMessageCommonDefinitions";
 import { TrackModel } from "../../commonTypes/deezerTypes";
 import { PlayerContextValue } from "../../commonTypes/playerTypes";
@@ -11,9 +12,9 @@ import { sendPostMessage } from "../../utils/postMessage";
 import { isExpired } from "../../utils/trackUtils";
 import { getSearchQuery } from "../../utils/youtubeUtils";
 
-export interface PlayerContextProvider {}
+let lastProgressUpdataTime = Date.now();
 
-export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ children }) => {
+export const PlayerContextProvider: React.FC = ({ children }) => {
   const dispatch = useAppDispatch();
 
   const mp3 = useAppSelector(selectMp3Urls);
@@ -28,10 +29,10 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
   const [shuffled, setShuffled] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [readyState, setReadyState] = useState(PlayerReadyState.Waiting);
 
   useEffect(() => {
     const audioEleme = document.createElement("audio");
-    let lastProgressUpdataTime = Date.now();
 
     audioEleme.onpause = () => setPaused(true);
     audioEleme.onplay = () => setPaused(false);
@@ -45,6 +46,9 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
       }
     };
     audioEleme.ondurationchange = () => setDuration(audioEleme.duration);
+
+    audioEleme.onwaiting = () => setReadyState(PlayerReadyState.Waiting);
+    audioEleme.oncanplay = () => setReadyState(PlayerReadyState.Ready);
 
     setAudio(audioEleme);
   }, []);
@@ -72,6 +76,14 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
       }
     }
   }, [track, mp3, audio]);
+
+  const seek = (time: number) => {
+    if (audio) {
+      audio.currentTime = time;
+      setReadyState(PlayerReadyState.Seeking);
+      lastProgressUpdataTime = 0;
+    }
+  };
 
   const toggleRepeat = () => setOnRepeat(!onRepeat);
 
@@ -101,6 +113,7 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
   const next = () => {
     const nextTrackIndex = currentQueue.findIndex((e) => e.id === track?.id) + 1;
     const nextTrack = currentQueue[getValidTrackIndex(nextTrackIndex)];
+    lastProgressUpdataTime = 0;
 
     playMp3(nextTrack);
   };
@@ -108,6 +121,7 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
   const previous = () => {
     const nextTrackIndex = currentQueue.findIndex((e) => e.id === track?.id) - 1;
     const nextTrack = currentQueue[getValidTrackIndex(nextTrackIndex)];
+    lastProgressUpdataTime = 0;
 
     playMp3(nextTrack);
   };
@@ -185,8 +199,10 @@ export const PlayerContextProvider: React.FC<PlayerContextProvider> = ({ childre
     track,
     duration,
     progress,
+    readyState,
     next,
     previous,
+    seek,
     togglePlay,
     toggleRepeat,
     toggleShuffle,

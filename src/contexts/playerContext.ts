@@ -1,3 +1,4 @@
+import { PlayerReadyState } from "./../commonDefinitions/playerCommonDefinitions";
 import { TrackModel } from "./../commonTypes/deezerTypes.d";
 import { PlayerContextValue } from "./../commonTypes/playerTypes.d";
 import React from "react";
@@ -10,8 +11,10 @@ const PlayerContext = React.createContext<PlayerContextValue>({
   track: null,
   duration: 0,
   progress: 0,
+  readyState: PlayerReadyState.Waiting,
   next: () => {},
   previous: () => {},
+  seek: (time: number) => {},
   togglePlay: () => {},
   toggleRepeat: () => {},
   toggleShuffle: () => {},
