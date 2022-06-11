@@ -100,7 +100,6 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
 }
 
 function* handleGetUserInfo(response: any) {
-  console.log(response);
   const { name, email, picture_xl } = response;
 
   yield put(changeUserName(name));

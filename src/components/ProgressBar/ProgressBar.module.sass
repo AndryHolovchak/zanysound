@@ -2,22 +2,16 @@
 
 .progress_bar
   display: flex
-  flex-direction: column
   align-items: center
-  
-  &__top
-    display: flex
-    align-items: center
-    justify-content: space-between
-    width: 100%
-    margin-bottom: 1vh
+  justify-content: space-between
 
   &__line_container
     border: 1px solid #ffffff2d
     background-color: #222222
     border-radius: 16px
-    width: 50%
-    height: 1vh
+    width: 100%
+    margin: 0 2vh
+    height: 4px
 
   &__line
     position: relative
@@ -36,5 +30,9 @@
       border: 1px solid #ffffff69
       border-radius: 50%
       background-color: #161616
+
+  &__duration,
+  &__progress
+    font-size: 2.1vh
     
     

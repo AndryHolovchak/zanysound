@@ -1,20 +1,30 @@
 @import "../../styles/"
     
 .screen_container
-    display: flex
-    height: 100%
-    background-color: $background_color
-    color: white
+	position: relative
+	display: flex
+	flex-direction: column
+	height: 100%
+	background-color: $background_color
+	color: white
 
-    &__desktop_menu_container
-        height: 100%
-        width: 200px
+	&__content
+		height: 100%
+		overflow-y: scroll
+		&::after
+			content: ''
+			display: block
+			height: 50px
 
-    &__right_side
-        flex: 1
-        display: flex
-        flex-direction: column
-    
-    &__screen
-        height: 100%
-        overflow: hidden
+
+	&__content--with-player-padding
+		&::after
+			content: ''
+			display: block
+			height: 170px
+
+	&__bottom
+		position: fixed
+		left: 0
+		bottom: 0
+		width: 100%

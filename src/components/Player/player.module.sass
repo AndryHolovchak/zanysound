@@ -1,20 +1,21 @@
 @import '../../styles'
 
-.player
+.compact_player
+  @include with-blur()
   display: flex
-  flex-direction: column
-  padding: 2vh 5vw
-  background-color: #101113
+  align-items: center
+  padding: 2vh
+  border-bottom: 1px solid #ffffff0e
 
-  &__bottom
-    flex: 1
+  &__left
     display: flex
     align-items: center
+    flex: 1
 
   &__cover
-    width: 8vh
-    height: 8vh
-    border-radius: 8px
+    width: 7vh
+    height: 7vh
+    border-radius: 6px
     margin-right: 5%
 
   &__main_info
@@ -35,22 +36,38 @@
     margin-left: auto
     margin-right: 2vh
 
-  &__queue_control
-    font-size: 4vh
-
-  &__mode_control
-    font-size: 3vh
-
-    &--active
-      color: #80e2ac
-
   &__toggle_play
     font-size: 3.5vh
-    margin: 0 5vh
+    margin-right: 3vh
+  
+  &__queue_control
+    font-size: 3vh
 
-  &__shuffle
-    width: 3vh
-    height: 3vh
+.full_size_player
+  @include with-blur()
+  position: fixed
+  bottom: 0
+  left: 0
+  z-index: 1
+  width: 100vw
+  height: 100vh
+  animation: show-full-size-player 0.5
 
-    &--active
-      filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)
+  &__background
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    filter: blur(60px) contrast(0.8) brightness(0.4)
+
+@keyframes show-full-size-player
+  from
+    transform: translateY(100%)
+  to
+    transform: translateY(0)
+
+@keyframes show-compact-player
+  from
+    opacity: 0
+  to
+    opacity: 1

@@ -1,8 +1,8 @@
-import React from "react";
+import classNames from "classnames";
+import React, { useContext } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectIsMobileEnv } from "../../slices/appSlice";
-
-import DesktopMenu from "../Menu/desktop/DesktopMenu";
+import PlayerContext from "../../contexts/playerContext";
+import { selectPlayerTrack } from "../../slices/playerSlice";
 import MobileMenu from "../Menu/mobile/MobileMenu";
 import { Player } from "../Player/Player";
 
@@ -12,24 +12,20 @@ export interface ScreenContainerProps {
   withMenu?: boolean;
 }
 
-const ScreenContainer: React.FC<ScreenContainerProps> = ({ children, withMenu = true }) => {
-  const isMobile = useAppSelector(selectIsMobileEnv);
+const ScreenContainer: React.FC<ScreenContainerProps> = ({ children }) => {
+  const playerContext = useContext(PlayerContext);
+
+  const contentClassName = classNames([
+    style.screen_container__content,
+    playerContext.track && style["screen_container__content--with-player-padding"],
+  ]);
 
   return (
     <div className={style.screen_container}>
-      {withMenu && !isMobile && (
-        <div className={style.screen_container__desktop_menu_container}>
-          <DesktopMenu />
-        </div>
-      )}
-      <div className={style.screen_container__right_side}>
-        <div className={style.screen_container__screen}>{children}</div>
-        {withMenu && isMobile && (
-          <div className={style.screen_container__mobile_menu_container}>
-            <Player />
-            <MobileMenu />
-          </div>
-        )}
+      <div className={contentClassName}>{children}</div>
+      <div className={style.screen_container__bottom}>
+        <Player />
+        <MobileMenu />
       </div>
     </div>
   );

@@ -47,7 +47,7 @@ function App() {
   //set post message handler
   useState(() => {
     window.addEventListener("message", (message) => {
-      if (!message.data.source?.includes("@devtools")) {
+      if (!message.data.source?.includes("@devtools") && message.data.type !== "webpackWarnings") {
         dispatch(handlePostMessageAction({ message }));
       }
     });

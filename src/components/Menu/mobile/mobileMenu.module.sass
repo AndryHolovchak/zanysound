@@ -1,11 +1,11 @@
 @import "../../../styles/"
 
 .mobile_menu
+    @include with-blur()
     display: flex
     flex-direction: row
     height: 6vh
-    background-color: $menu_background
-
+    
     &__item
         flex: 1
         display: flex

@@ -58,10 +58,7 @@ export const ProgressBar = () => {
 
   return (
     <div className={style.progress_bar}>
-      <div className={style.progress_bar__top}>
-        <div className={style.progress_bar__progress}>{sec2MMSS(seekingState ? selectedTime : progress)}</div>
-        <div className={style.progress_bar__duration}>{sec2MMSS(duration)}</div>
-      </div>
+      <div className={style.progress_bar__progress}>{sec2MMSS(seekingState ? selectedTime : progress)}</div>
       <div
         className={style.progress_bar__line_container}
         ref={lineContainerRef}
@@ -71,6 +68,7 @@ export const ProgressBar = () => {
       >
         <div className={style.progress_bar__line} style={{ width: lineWidth }} />
       </div>
+      <div className={style.progress_bar__duration}>{sec2MMSS(duration)}</div>
     </div>
   );
 };
