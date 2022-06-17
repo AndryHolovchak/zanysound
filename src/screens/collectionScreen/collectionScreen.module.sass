@@ -1,14 +1,54 @@
 @import '../../styles'
 
 .collection_screen
+  padding: 2vh
+
   &__new_button
     display: flex
     align-items: center
+    height: 80px
+
+  &__new_button_icon_container
+    display: flex
+    align-items: center
     justify-content: center
-    width: 64px
-    height: 64px
+    width: 70px
+    height: 70px
+    margin-right: 10px
     border-radius: 8px
-    background-color: #628d61
+    background-color: #0f0f0f
+    border: 1px solid #ffffff1e
 
   &__new_button_icon
     font-size: 30px
+    color: #9aeb9a
+
+  &__new_button_right_side
+    display: flex
+    align-items: center
+    flex: 1
+    height: 100%
+    border-top: 1px solid #ffffff11
+
+
+  &__new_button_text
+    color: #b5e4b5
+    font-weight: 500
+
+.new_playlist_modal
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  width: 300px
+  padding: 30px
+  border-radius: 8px
+  border: 1px solid #fff1
+  background-color: #0f0f0f
+
+
+  &__input
+    margin-bottom: 20px
+
+  &__button
+    width: 80%

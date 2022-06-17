@@ -8,7 +8,7 @@ export interface PlayerContextValue {
   paused: boolean;
   track: TrackModel | null;
   duration: number;
-  progress: number;
+  getProgress: () => number;
   readyState: PlayerReadyState;
   next: () => void;
   previous: () => void;

@@ -28,8 +28,8 @@ export const PlaylistPreview = ({ playlistModel }: PlaylistPreviewProps) => {
       <img className={styles.playlist_preview__cover} src={playlistModel.xlPicture} alt="" />
       <div className={styles.playlist_preview__right_side}>
         <span className={styles.playlist_preview__title}>{playlistModel.title}</span>
+        <Icon name="trash" className={styles.playlist_preview__delete_icon} onClick={handleDeleteIconClick} />
       </div>
-      <Icon name="trash" className={styles.playlist_preview__delete_icon} onClick={handleDeleteIconClick} />
     </div>
   );
 };

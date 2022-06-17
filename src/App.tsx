@@ -33,6 +33,9 @@ function App() {
     }
   }, [isMobile, dispatch]);
 
+  //
+  useEffect(() => {}, []);
+
   //update isMobile value on resize
   useEffect(() => {
     window.addEventListener("resize", handleWindowResize);

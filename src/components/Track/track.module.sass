@@ -3,14 +3,11 @@
 .track
   display: flex
   align-items: center
-  padding: 1vh 5vw 1vh 1.5vh
+  padding: 1vh 3vw 1vh 1.5vh
   background-color: $track_background
 
   &--playing
     color: #a5e093
-
-  &:hover
-    background-color: lighten($track_background, 1%)
 
   &__cover
     width: 45px
@@ -27,19 +24,12 @@
     cursor: default
 
   &__artist
-    opacity: 0.5
+    color: #c4c4c4
     font-size: 14px
     cursor: default
 
-  &__popup_menu
-    margin-left: 4vh
-
-  &__popup_item_delete_text
-    color: #f07979
-
-  &__popup_item_delete_icon
-    color: #f07979
-
   &__like
     margin-left: auto
-    color: $accent_color
+
+  &__popup_menu
+    margin-left: 2vh

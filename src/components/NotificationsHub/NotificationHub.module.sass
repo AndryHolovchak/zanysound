@@ -4,7 +4,62 @@
   position: fixed
   top: 0
   left: 0
-  z-index: 2
+  z-index: 3
   width: 100vw
-  background-color: #0f0f0f
+  padding: 10px 30px 0
+
+.notification_item
+  position: relative
+  display: flex
+  align-items: center
+  padding: 15px 10px
+  padding-right: 30px
+  padding-left: 45px
+  border-radius: 8px
   color: #fff
+  box-shadow: 0 0 15px -3px #000
+  animation: show-notification-item 0.3s
+
+  & + &
+    margin-top: 10px
+
+  &__left_border
+    position: absolute
+    left: 0
+    top: 0
+    width: 35px
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    border-radius: 8px 0 0 8px
+
+  &__close_icon
+    margin-left: auto
+
+  &--success
+    background-color: #e3fcef
+    color: #026745
+
+    .notification_item__left_border
+      background-color: #36b37e
+
+    .notification_item__close_icon
+      color: #74b39c
+
+  &--error
+    background-color: #ffebe6
+    color: #bf2600
+
+    .notification_item__left_border
+      background-color: #ff5630
+
+    .notification_item__close_icon
+      color: #e08b75
+
+
+@keyframes show-notification-item
+  from
+    opacity: 0
+  to
+    opacity: 1

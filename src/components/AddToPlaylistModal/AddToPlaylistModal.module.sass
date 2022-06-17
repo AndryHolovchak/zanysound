@@ -3,15 +3,25 @@
 .add_to_playlist_modal
   display: flex
   flex-direction: column
-  max-height: 50vh
+  width: 80vw
+  max-height: 70vh
+  padding: 1vh
   overflow-y: auto
   border-radius: 6px
+  background-color: #060606
+  color: #fff
 
 .modal_item
-  padding: 1vh
-  color: #fff
-  background-color: #131313
+  display: flex
+  align-items: center
+  padding: 0.5vh
 
   & + &
     border-top: 1px solid #ffffff18
+
+  &__cover
+    width: 40px
+    height: 40px
+    margin-right: 8px
+    border-radius: 4px
     

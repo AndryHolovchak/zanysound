@@ -4,24 +4,53 @@ $input_height: min(50px, 8vh)
 
 .search_screen
   position: relative
-  height: 100%
 
   &__tracklist
     padding-top: $input_height
 
+  &__no_results
+    position: absolute
+    top: 20%
+    left: 50%
+    transform: translate(-50%, -50%)
+    color: #ebebeb
+    font-size: 35px
+    font-weight: 600
+
 .search_screen_input
-  position: absolute
+  @include with-blur()
+  position: fixed
   z-index: 1
   height: $input_height 
   width: 100%
+  display: flex
+  align-items: center
+
+  &__icon_container
+    position: absolute
+    top: 50%
+    left: 0
+    transform: translateY(-50%)
+    height: 100%
+    width: $input_height
+    border-radius: 0 6px 6px 0 
+    display: flex
+    align-items: center
+    justify-content: center
+    background-color: #a4e7b2
+
+  &__icon
+    color: #161616
+    font-size: 20px
 
   input
     width: 100%
     height: 100%
     border: none
     padding: 0 5%
-    border-bottom: 1px solid rgba($accent_color, 0.2)
-    background-color: $input_background
+    padding-left: calc($input_height + 20px)
+    // background-color: $input_background
+    background-color: transparent
     color: $primary_text_color
     box-shadow: 0 0 15px -9px #000
     font-size: 18px

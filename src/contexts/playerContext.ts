@@ -10,7 +10,7 @@ const PlayerContext = React.createContext<PlayerContextValue>({
   paused: false,
   track: null,
   duration: 0,
-  progress: 0,
+  getProgress: () => 0,
   readyState: PlayerReadyState.Waiting,
   next: () => {},
   previous: () => {},

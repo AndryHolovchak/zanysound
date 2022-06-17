@@ -45,7 +45,7 @@ const Tracklist: React.FC<TracklistProps> = ({ id, tracks, className, parentPlay
         {tracks.map((e) => (
           <Track
             parentPlaylist={parentPlaylist}
-            playing={player.track?.id === e.id}
+            playing={player.tracklistId === id && player.track?.id === e.id}
             key={e.id}
             liked={likedTracksIds.includes(e.id)}
             model={e}

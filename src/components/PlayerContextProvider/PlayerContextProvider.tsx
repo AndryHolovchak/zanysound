@@ -39,6 +39,7 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
     audioEleme.onplaying = () => setPaused(false);
     audioEleme.onabort = () => setPaused(true);
     audioEleme.ontimeupdate = () => {
+      return;
       // Throttling
       if (Date.now() - lastProgressUpdataTime >= 1000) {
         setProgress(audioEleme?.currentTime || 0);
@@ -191,6 +192,8 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
     }
   };
 
+  const getProgress = () => audio?.currentTime || 0;
+
   const value: PlayerContextValue = {
     tracklistId,
     onRepeat,
@@ -198,7 +201,7 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
     paused,
     track,
     duration,
-    progress,
+    getProgress,
     readyState,
     next,
     previous,

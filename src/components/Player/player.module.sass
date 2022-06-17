@@ -1,11 +1,9 @@
 @import '../../styles'
 
 .compact_player
-  @include with-blur()
   display: flex
   align-items: center
   padding: 2vh
-  border-bottom: 1px solid #ffffff0e
 
   &__left
     display: flex
@@ -29,6 +27,10 @@
     color: $gray
     font-size: 2vh
 
+  &__like
+    font-size: 18px
+    margin-left: 13px
+
   &__controls
     display: flex
     align-items: center
@@ -44,30 +46,134 @@
     font-size: 3vh
 
 .full_size_player
-  @include with-blur()
   position: fixed
   bottom: 0
   left: 0
   z-index: 1
+  display: flex
+  flex-direction: column
+  align-items: center
   width: 100vw
   height: 100vh
-  animation: show-full-size-player 0.5
+  padding: 20px
+  animation: show-full-size-player 0.2s
+  background-color: #161616
+
+  &--hiding
+    animation: hide-full-size-player 0.2s
+    
+  &__hide_click_area
+    position: relative
+    width: 100%
+    height: 60px
+
+  &__close_button
+    position: absolute
+    top: 0
+    left: 50%
+    transform: translateX(-50%)
+    font-size: 30px
 
   &__background
     position: absolute
     top: 50%
     left: 50%
-    transform: translate(-50%, -50%)
+    z-index: -1
+    transform: translate(-50%, -50%) translateZ(0) // slow performance (translateZ)
     filter: blur(60px) contrast(0.8) brightness(0.4)
+    -webkit-perspective: 1000 // fix for slow performance
+
+  &__cover
+    width: 300px
+    height: 300px
+    border-radius: 8px
+    margin-bottom: 10px
+    box-shadow: 0 0 20px -10px black
+
+  &__top_section
+    position: relative
+    display: flex
+    align-items: center
+    width: 100%
+
+  &__top_section_text
+    flex: 1
+    display: flex
+    flex-direction: column
+
+  &__track_buttons
+    display: flex
+    align-items: center
+
+  &__title
+    font-size: 25px
+    font-weight: 500
+    color: #ececec
+  
+  &__artist
+    font-size: 15px
+    color: #ecececcb
+
+  &__like
+    font-size: 20px
+    margin-right: 20px
+  
+  &__popup_icon
+    font-size: 20px
+
+  &__progress_bar
+    width: 100%
+    margin-top: 50px
+
+  &__mode_controls
+    display: flex
+    align-items: center
+    justify-content: space-between
+    width: 100%
+    margin-top: 15px
+
+  &__mode_font_icon
+    color: #fff
+    font-size: 20px
+
+  &__mode_svg_icon
+    width: 22px
+    height: 22px
+
+  &__mode_icon
+    opacity: 0.5
+
+    &--active
+      opacity: 1
+
+  &__main_controls
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 100%
+    margin-top: 30px
+
+  &__prev_button,
+  &__next_button
+    font-size: 30px
+
+  &__toggle_play
+    font-size: 40px
+    margin: 0 50px
+
 
 @keyframes show-full-size-player
   from
+    opacity: 0
     transform: translateY(100%)
   to
+    opacity: 1
     transform: translateY(0)
 
-@keyframes show-compact-player
+@keyframes hide-full-size-player
   from
-    opacity: 0
-  to
     opacity: 1
+    transform: translateY(0)
+  to
+    opacity: 0
+    transform: translateY(100%)

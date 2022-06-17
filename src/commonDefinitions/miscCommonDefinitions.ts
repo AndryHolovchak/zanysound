@@ -10,3 +10,8 @@ export enum RequestType {
   Post = "POST",
   Delete = "DELETE",
 }
+
+export enum NotificationType {
+  Success,
+  Error,
+}

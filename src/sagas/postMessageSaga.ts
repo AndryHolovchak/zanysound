@@ -1,5 +1,11 @@
 import { searchTrack } from "./searchSaga";
-import { changeUserEmail, changeUserName, changeUserPicture, selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
+import {
+  changeUserEmail,
+  changeUserName,
+  changeUserPicture,
+  selectLikedTracks,
+  selectLikedTracksIds,
+} from "./../slices/userSlice";
 import { loadPlaylistInfoAction, loadPlaylistTracksAction, loadRecommendedTracksAction } from "./contentSaga";
 import { copyObject, createNotificationItem, generateId } from "./../utils/common";
 import { getPlaylistTracks } from "./../helpers/deezerApiHelper";
@@ -24,6 +30,7 @@ import { changeLikedTracks, changeLikedTracksIds } from "../slices/userSlice";
 import { setMp3Url, setVideoId } from "../slices/mp3Slice";
 import { addNotification } from "../slices/notificationSlice";
 import config from "../config/config";
+import { NotificationType } from "../commonDefinitions/miscCommonDefinitions";
 
 const HANDLE_POST_MESSAGE = "postMessage/handle";
 
@@ -50,7 +57,7 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
 
   if (networkError) {
     console.log("Network Error");
-    yield put(addNotification(createNotificationItem("Error", "No internet connection")));
+    yield put(addNotification(createNotificationItem(NotificationType.Error, "No internet connection")));
     return;
   }
 
@@ -169,6 +176,11 @@ function* handleSearchTrack(initiator: PostMessage, response: any) {
     yield put(changeSearchResultId(generateId()));
   }
 
+  if (!response.data.length) {
+    yield put(changeSearchResult(null));
+    return;
+  }
+
   yield put(addSearchResult(response.data.map((e: any) => parseTrack(e))));
 
   const numberOfTracks = searchResult.length + response.data.length;
@@ -238,8 +250,9 @@ function* handlePlaylistTracksChangeResponse(initiator: PostMessage, response: a
     console.log(playlistId);
 
     yield put(loadPlaylistTracksAction({ playlistId }));
+    yield put(addNotification(createNotificationItem(NotificationType.Success, "Track added to the playlist")));
   } else {
-    yield put(addNotification(createNotificationItem("Track is already in this playlist")));
+    yield put(addNotification(createNotificationItem(NotificationType.Error, "Track is already in this playlist")));
   }
 }
 

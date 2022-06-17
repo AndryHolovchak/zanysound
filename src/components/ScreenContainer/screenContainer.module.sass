@@ -21,10 +21,13 @@
 		&::after
 			content: ''
 			display: block
-			height: 170px
+			height: 120px
+			background-color: #141419 // the same as track's bg
 
 	&__bottom
+		@include with-blur()
 		position: fixed
 		left: 0
 		bottom: 0
+		z-index: 2
 		width: 100%

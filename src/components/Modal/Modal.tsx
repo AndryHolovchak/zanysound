@@ -7,7 +7,13 @@ export interface ModalProps {
 
 export const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
   return (
-    <div className={styles.modal} onClick={onClose}>
+    <div
+      className={styles.modal}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClose();
+      }}
+    >
       <div className={styles.modal__inner} onClick={(e) => e.stopPropagation()}>
         {children}
       </div>

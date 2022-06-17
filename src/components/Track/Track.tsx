@@ -7,10 +7,12 @@ import { retrieveMp3UrlAction } from "../../sagas/mp3Saga";
 import { addTrackToLikedAction, removeTrackFromLikedAction } from "../../sagas/userSaga";
 import Icon from "../Icon/Icon";
 import { IconType } from "../Icon/iconCommonDefinition";
-import { AddToPlaylistModa } from "../AddToPlaylistModal/AddToPlaylistModal";
+import { AddToPlaylistModal } from "../AddToPlaylistModal/AddToPlaylistModal";
 import { PopupMenu } from "../PopupMenu/PopupMenu";
 import style from "./track.module.sass";
 import { PopupMenuItem } from "../PopupMenu/static/popupMenuTypes";
+import { LikeButton } from "../LikeButton/LikeButton";
+import { TrackPopupMenu } from "../TrackPopupMenu/TrackPopupMenu";
 
 export interface TrackProps {
   model: TrackModel;
@@ -22,40 +24,7 @@ export interface TrackProps {
 }
 
 const Track: React.FC<TrackProps> = ({ model, liked, playing, className, onClick, parentPlaylist }) => {
-  const dispatch = useAppDispatch();
-
-  const [showPlaylistsModal, setShowPlaylistsModal] = useState(false);
-
   const finalClassName = classNames([style.track, className, playing && style["track--playing"]]);
-
-  const handleLikeClick = (e: React.MouseEvent<HTMLElement>) => {
-    if (liked) {
-      dispatch(removeTrackFromLikedAction({ track: model }));
-    } else {
-      dispatch(addTrackToLikedAction({ track: model }));
-    }
-  };
-
-  const generatePopupMenuItems = () => {
-    const items: PopupMenuItem[] = [
-      {
-        text: "Add to playlist",
-        iconName: "plus",
-        onClick: () => setShowPlaylistsModal(true),
-      },
-    ];
-
-    if (parentPlaylist) {
-      items.push({
-        text: "Remove from playlist",
-        iconName: "minus",
-        textClassName: style.track__popup_item_delete_text,
-        iconClassName: style.track__popup_item_delete_icon,
-        onClick: () => dispatch(removeFromPlaylistAction({ trackId: model.id, playlistId: parentPlaylist.id })),
-      });
-    }
-    return items;
-  };
 
   return (
     <div className={finalClassName} onClick={onClick}>
@@ -64,15 +33,8 @@ const Track: React.FC<TrackProps> = ({ model, liked, playing, className, onClick
         <span className={style.track__title}>{model.title}</span>
         <span className={style.track__artist}>{model.artist.name}</span>
       </div>
-      <Icon
-        stopClickPropagation
-        name="heart"
-        type={liked ? IconType.Solid : IconType.Light}
-        className={style.track__like}
-        onClick={handleLikeClick}
-      />
-      <PopupMenu className={style.track__popup_menu} items={generatePopupMenuItems()} />
-      {showPlaylistsModal && <AddToPlaylistModa onClose={() => setShowPlaylistsModal(false)} trackId={model.id} />}
+      <LikeButton liked={liked} track={model} className={style.track__like} />
+      <TrackPopupMenu trackId={model.id} playlistId={parentPlaylist?.id} className={style.track__popup_menu} />
     </div>
   );
 };

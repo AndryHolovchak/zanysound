@@ -1,0 +1,42 @@
+@import "../../styles/"
+
+.playlist_screen
+  position: relative
+  width: 100%
+
+  &__head
+    @include with-blur()
+    position: fixed
+    z-index: 1
+    top: 0
+    left: 0
+    width: 100%
+    display: flex
+    align-items: center
+
+  &__head_icon_container
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 50px
+    height: 50px
+    border: 1px solid #d1e9dc1f
+    border-radius: 0 8px 8px 0
+    background-color: #0c0c0c
+
+  &__head_icon
+    font-size: 22px
+    color: #c4f3ce
+
+  &__head_title
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    font-size: 23px
+    font-weight: 500
+
+  &__tracklist
+    padding-top: 55px
+
+

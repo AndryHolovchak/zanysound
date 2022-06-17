@@ -3,7 +3,7 @@ import { handlePostMessageAction } from "./../sagas/postMessageSaga";
 import { store } from "../app/store";
 import { PostMessage } from "../commonTypes/postMessageTypes";
 
-const backendUrl = "http://localhost:3001/";
+const backendUrl = "http://192.168.0.104:3001" || "http://localhost:3001/";
 
 export function* sendPostMessage(message: PostMessage): any {
   //@ts-ignore
