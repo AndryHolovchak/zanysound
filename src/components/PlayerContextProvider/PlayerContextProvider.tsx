@@ -27,7 +27,6 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
   const [paused, setPaused] = useState(true);
   const [onRepeat, setOnRepeat] = useState(false);
   const [shuffled, setShuffled] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [readyState, setReadyState] = useState(PlayerReadyState.Waiting);
 
@@ -38,14 +37,6 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
     audioEleme.onplay = () => setPaused(false);
     audioEleme.onplaying = () => setPaused(false);
     audioEleme.onabort = () => setPaused(true);
-    audioEleme.ontimeupdate = () => {
-      return;
-      // Throttling
-      if (Date.now() - lastProgressUpdataTime >= 1000) {
-        setProgress(audioEleme?.currentTime || 0);
-        lastProgressUpdataTime = Date.now();
-      }
-    };
     audioEleme.ondurationchange = () => setDuration(audioEleme.duration);
 
     audioEleme.onwaiting = () => setReadyState(PlayerReadyState.Waiting);

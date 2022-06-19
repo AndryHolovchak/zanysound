@@ -27,6 +27,13 @@ export const LikeButton = ({ liked, track, className }: LikeButtonProps) => {
   const finalClassName = classNames([styles.like_button, className]);
 
   return (
-    <Icon stopClickPropagation name="heart" type={liked ? IconType.Solid : IconType.Light} className={finalClassName} onClick={handleLikeClick} />
+    <div className={finalClassName}>
+      <Icon
+        stopClickPropagation
+        name="heart"
+        type={liked ? IconType.Solid : IconType.Light}
+        onClick={handleLikeClick}
+      />
+    </div>
   );
 };

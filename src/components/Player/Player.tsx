@@ -5,6 +5,7 @@ import PlayerContext from "../../contexts/playerContext";
 import { selectPlaylists } from "../../slices/contentSlice";
 import { selectPlayerPaused, selectPlayerTrack } from "../../slices/playerSlice";
 import { selectLikedTracksIds } from "../../slices/userSlice";
+import { EllipsisText } from "../EllipsisText/EllipsisText";
 import Icon from "../Icon/Icon";
 import { IconType } from "../Icon/iconCommonDefinition";
 import { LikeButton } from "../LikeButton/LikeButton";
@@ -34,8 +35,6 @@ const FullSizePlayer = ({ onClose }: FullSizePlayerProps) => {
   const playerPlaylistsIds = Object.keys(playerPlaylists);
 
   const [isHiding, setIsHiding] = useState(false);
-
-  console.log(window.screen.orientation);
 
   const track = playerContext.track;
 
@@ -74,8 +73,8 @@ const FullSizePlayer = ({ onClose }: FullSizePlayerProps) => {
       <img src={track.album.xlCover} className={styles.full_size_player__cover} />
       <div className={styles.full_size_player__top_section}>
         <div className={styles.full_size_player__top_section_text}>
-          <span className={styles.full_size_player__title}>{track.title}</span>
-          <span className={styles.full_size_player__artist}>{track.artist.name}</span>
+          <EllipsisText value={track.title} className={styles.full_size_player__title} />
+          <EllipsisText value={track.artist.name} className={styles.full_size_player__artist} />
         </div>
         <div className={styles.full_size_player__track_buttons}>
           <LikeButton
@@ -137,10 +136,9 @@ const CompactPlayer = ({ onClick }: CompactPlayerProps) => {
       <div className={styles.compact_player__left}>
         <img src={track.album.xlCover} className={styles.compact_player__cover} />
         <div className={styles.compact_player__main_info}>
-          <span className={styles.compact_player__title}>{track.title}</span>
-          <span className={styles.compact_player__artist}>{track.artist.name}</span>
+          <EllipsisText value={track.title} className={styles.compact_player__title} />
+          <EllipsisText value={track.artist.name} className={styles.compact_player__artist} />
         </div>
-        <LikeButton className={styles.compact_player__like} liked={likedTracksIds.includes(track.id)} track={track} />
       </div>
       <div className={styles.compact_player__controls}>
         <Icon

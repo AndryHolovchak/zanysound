@@ -61,7 +61,12 @@ const NewPlaylistModal = ({ onClose }: NewPlaylistModalProps) => {
     <Modal onClose={onClose}>
       <div className={styles.new_playlist_modal}>
         <Input placeholder="Title" value={title} onChange={setTitle} className={styles.new_playlist_modal__input} />
-        <Button title="Create" onCLick={handleButtonClick} className={styles.new_playlist_modal__button} />
+        <Button
+          disabled={title.length === 0}
+          title="Create"
+          onCLick={handleButtonClick}
+          className={styles.new_playlist_modal__button}
+        />
       </div>
     </Modal>
   );

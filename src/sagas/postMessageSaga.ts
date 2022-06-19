@@ -8,7 +8,6 @@ import {
 } from "./../slices/userSlice";
 import { loadPlaylistInfoAction, loadPlaylistTracksAction, loadRecommendedTracksAction } from "./contentSaga";
 import { copyObject, createNotificationItem, generateId } from "./../utils/common";
-import { getPlaylistTracks } from "./../helpers/deezerApiHelper";
 import { Playlists, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
 import {
   selectPlaylists,
@@ -139,7 +138,7 @@ function* handleGetUserPlaylist(response: any[]) {
 
   //load liked tracks
   if (likedPlaylist) {
-    yield getPlaylistTracks(likedPlaylist.id);
+    yield put(loadPlaylistTracksAction({ playlistId: likedPlaylist.id }));
   }
 }
 

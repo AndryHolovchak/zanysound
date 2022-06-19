@@ -45,7 +45,7 @@ interface ModalItemProps {
 const ModalItem = ({ playlist, onClick }: ModalItemProps) => {
   return (
     <div className={style.modal_item} onClick={onClick}>
-      <img src={playlist.smallPicture} className={style.modal_item__cover} />
+      <img src={playlist.xlPicture} className={style.modal_item__cover} />
       <span className={style.modal_item__title}>{playlist.title}</span>
     </div>
   );

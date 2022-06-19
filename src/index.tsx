@@ -5,6 +5,7 @@ import { persistor, store } from "./app/store";
 import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import { PersistGate } from "redux-persist/integration/react";
+import "@fontsource/roboto";
 
 ReactDOM.render(
   <React.StrictMode>

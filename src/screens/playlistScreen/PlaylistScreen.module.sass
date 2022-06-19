@@ -1,5 +1,7 @@
 @import "../../styles/"
 
+$head_height: 8vh
+
 .playlist_screen
   position: relative
   width: 100%
@@ -11,32 +13,39 @@
     top: 0
     left: 0
     width: 100%
-    display: flex
-    align-items: center
-
-  &__head_icon_container
+    height: $head_height
     display: flex
     align-items: center
     justify-content: center
-    width: 50px
-    height: 50px
-    border: 1px solid #d1e9dc1f
-    border-radius: 0 8px 8px 0
-    background-color: #0c0c0c
+    border-bottom: 1px solid $black_4
+    box-shadow: 0 5px 10px -3px $black_2
+
+  &__head_icon_container
+    position: absolute
+    top: 0
+    left: 0
+    display: flex
+    align-items: center
+    justify-content: center
+    width: $head_height
+    height: $head_height
+    border: 1px solid $gray_1
+    border-radius: 0 5vh 5vh 0
+    background-color: $black_1
 
   &__head_icon
-    font-size: 22px
-    color: #c4f3ce
+    font-size: 3.2vh
+    color: $green_0
 
   &__head_title
-    position: absolute
-    top: 50%
-    left: 50%
-    transform: translate(-50%, -50%)
-    font-size: 23px
+    font-size: 3.5vh
     font-weight: 500
 
+  &__head_title_container
+    width: 50%
+    text-align: center
+
   &__tracklist
-    padding-top: 55px
+    padding-top: $head_height
 
 

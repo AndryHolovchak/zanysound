@@ -7,7 +7,6 @@ export interface DeezerState {
 }
 
 const initialState: DeezerState = {
-  // token: "frA3ukhBZ8NjZMloYtiBcYxN8Pj56UMd69MGAEOcNlxb2GnBR7",
   token: "fr0P5wwenb9sKu523vT6rCFPetPrvXJiZx3wqpbj9mI94aD9jN",
 };
 

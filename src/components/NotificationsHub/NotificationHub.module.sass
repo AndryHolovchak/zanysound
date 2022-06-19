@@ -6,56 +6,62 @@
   left: 0
   z-index: 3
   width: 100vw
-  padding: 10px 30px 0
+  padding: 2vh 7vw 0
 
 .notification_item
   position: relative
   display: flex
   align-items: center
-  padding: 15px 10px
-  padding-right: 30px
-  padding-left: 45px
-  border-radius: 8px
-  color: #fff
-  box-shadow: 0 0 15px -3px #000
+  padding: 2.2vh
+  padding-left: 7vh
+  border-radius: 1vh
+  color: $white
+  box-shadow: 0 0 15px -3px $black_2
   animation: show-notification-item 0.3s
 
   & + &
-    margin-top: 10px
+    margin-top: 2vh
 
   &__left_border
     position: absolute
     left: 0
     top: 0
-    width: 35px
+    width: 5vh
     height: 100%
     display: flex
     align-items: center
     justify-content: center
-    border-radius: 8px 0 0 8px
+    border-radius: 1vh 0 0 1vh
+
+  &__border_icon
+    font-size: 2.4vh
+
+  &__text
+    font-size: 2.2vh
 
   &__close_icon
+    font-size: 2.3vh
     margin-left: auto
 
   &--success
-    background-color: #e3fcef
-    color: #026745
+    background-color: $green_3
+    color: $green_4
 
     .notification_item__left_border
-      background-color: #36b37e
+      background-color: $green_5
 
     .notification_item__close_icon
-      color: #74b39c
+      color: $green_6
 
   &--error
-    background-color: #ffebe6
-    color: #bf2600
+    background-color: $red_1
+    color: $red_2
 
     .notification_item__left_border
-      background-color: #ff5630
+      background-color: $red_3
 
     .notification_item__close_icon
-      color: #e08b75
+      color: $red_4
 
 
 @keyframes show-notification-item

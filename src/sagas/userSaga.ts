@@ -1,16 +1,8 @@
-import { changePlaylistsTracks, selectPlaylists, selectPlaylistsTracks } from "./../slices/contentSlice";
-import { logWarning } from "./../helpers/dev";
-import { Playlists, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
-import { selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
-import { addTrackToLikedApiCall, getPlaylistTracks, getUserInfo, removeTrackFromLikedApiCall } from "./../helpers/deezerApiHelper";
-import { parsePlaylist } from "./../helpers/deezerDataHelper";
-import { PlaylistModel, TrackModel } from "./../commonTypes/deezerTypes.d";
-import { parseTrack } from "../helpers/deezerDataHelper";
-import { put, select, takeLatest } from "redux-saga/effects";
-import { getUserPlaylists } from "../helpers/deezerApiHelper";
-import { changeLikedTracks, changeLikedTracksIds } from "../slices/userSlice";
-import { AsyncContentState } from "../commonDefinitions/miscCommonDefinitions";
-import { changePlaylists } from "../slices/contentSlice";
+import { RequestType } from "./../commonDefinitions/miscCommonDefinitions";
+import { FetchPostMessageType } from "./../commonDefinitions/postMessageCommonDefinitions";
+import { deezerApiRequest } from "./../helpers/deezerApiHelper";
+import { TrackModel } from "./../commonTypes/deezerTypes.d";
+import { put, takeLatest } from "redux-saga/effects";
 
 const LOAD_BASIC_USER_INFO = "user/load/basicInfo";
 const LOAD_USER_PLAYLISTS = "user/load/playlists";
@@ -63,21 +55,35 @@ export const removeTrackFromLikedAction = (payload: RemoveTrackFromLikedPayload)
 
 function* loadBasicUserInfoWatcher() {
   yield put(loadUserPlaylists());
-  yield getUserInfo();
+  yield deezerApiRequest(FetchPostMessageType.GetUserInfo, "/user/me");
 }
 
 function* loadUserPlaylistsWatcher(): any {
-  yield getUserPlaylists();
+  yield deezerApiRequest(FetchPostMessageType.GetUserPlaylists, "/user/me/playlists");
 }
 
 function* addTrackToLikedWatcher({ payload }: AddTrackToLiked) {
   const { track } = payload;
-  yield addTrackToLikedApiCall(track);
+  yield deezerApiRequest(
+    FetchPostMessageType.AddTrackToLiked,
+    `/user/me/tracks`,
+    { track_id: track.id },
+    RequestType.Post,
+    {},
+    { track }
+  );
 }
 
 function* removeTrackFromLikedWatcher({ payload }: RemoveTrackFromLiked) {
   const { track } = payload;
-  yield removeTrackFromLikedApiCall(track);
+  yield deezerApiRequest(
+    FetchPostMessageType.RemoveTrackFromLiked,
+    `/user/me/tracks`,
+    { track_id: track.id },
+    RequestType.Delete,
+    {},
+    { track }
+  );
 }
 
 export default function* userSaga() {

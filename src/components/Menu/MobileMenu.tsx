@@ -1,10 +1,10 @@
 import React from "react";
 import classNames from "classnames";
 import { useHistory, useLocation } from "react-router-dom";
-import { Routes } from "../../../commonDefinitions/routeCommonDefinitions";
+import { Routes } from "../../commonDefinitions/routeCommonDefinitions";
 
-import Icon from "../../Icon/Icon";
-import "../../../assets/fonts/fontawesome/css//all.min.css";
+import Icon from "../Icon/Icon";
+import "../../assets/fonts/fontawesome/css/all.min.css";
 import style from "./mobileMenu.module.sass";
 
 const MobileMenu: React.FC = () => {
@@ -28,7 +28,10 @@ const MenuItem: React.FC<MenuItemProps> = ({ path, icon }) => {
   const location = useLocation();
   const history = useHistory();
 
-  const className = classNames([style.mobile_menu__item, { [style["mobile_menu__item--active"]]: location.pathname === path }]);
+  const className = classNames([
+    style.mobile_menu__item,
+    { [style["mobile_menu__item--active"]]: location.pathname === path },
+  ]);
 
   return (
     <div className={className} onClick={() => history.push(path)}>

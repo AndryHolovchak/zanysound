@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { useAppSelector } from "../../app/hooks";
 import PlayerContext from "../../contexts/playerContext";
 import { selectPlayerTrack } from "../../slices/playerSlice";
-import MobileMenu from "../Menu/mobile/MobileMenu";
+import MobileMenu from "../Menu/MobileMenu";
 import { Player } from "../Player/Player";
 
 import style from "./screenContainer.module.sass";

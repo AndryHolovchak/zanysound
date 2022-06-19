@@ -1,4 +1,4 @@
-import React, { KeyboardEventHandler, useState } from "react";
+import React, { KeyboardEventHandler, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Icon from "../../components/Icon/Icon";
 import { IconType } from "../../components/Icon/iconCommonDefinition";
@@ -28,11 +28,15 @@ const SearchScreen: React.FC = () => {
 
 const SearchScreenInput = () => {
   const dispatch = useAppDispatch();
+
+  const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
 
   const handleSearch = () => {
     dispatch(changeSearchResult([]));
     dispatch(searchTrack({ query: value, startIndex: 0 }));
+
+    inputRef.current?.blur();
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -51,7 +55,7 @@ const SearchScreenInput = () => {
           className={style.search_screen_input__icon}
         />
       </div>
-      <input value={value} onChange={(e) => setValue(e.target.value)} placeholder="Search"></input>
+      <input ref={inputRef} value={value} onChange={(e) => setValue(e.target.value)} placeholder="Search"></input>
     </div>
   );
 };

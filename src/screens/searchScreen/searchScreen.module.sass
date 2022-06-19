@@ -1,6 +1,6 @@
 @import "../../styles"
 
-$input_height: min(50px, 8vh)
+$input_height: 8vh
 
 .search_screen
   position: relative
@@ -9,17 +9,17 @@ $input_height: min(50px, 8vh)
     padding-top: $input_height
 
   &__no_results
-    position: absolute
-    top: 20%
-    left: 50%
-    transform: translate(-50%, -50%)
-    color: #ebebeb
-    font-size: 35px
+    display: block
+    margin: 20vh auto 0
+    text-align: center
+    color: $gray_3
+    font-size: 6vh
     font-weight: 600
 
 .search_screen_input
   @include with-blur()
   position: fixed
+  top: 0
   z-index: 1
   height: $input_height 
   width: 100%
@@ -33,30 +33,28 @@ $input_height: min(50px, 8vh)
     transform: translateY(-50%)
     height: 100%
     width: $input_height
-    border-radius: 0 6px 6px 0 
+    border-radius: 0 1vh 1vh 0 
     display: flex
     align-items: center
     justify-content: center
-    background-color: #a4e7b2
+    background-color: $green_2
 
   &__icon
-    color: #161616
-    font-size: 20px
+    color: $black_0
+    font-size: 3vh
 
   input
     width: 100%
     height: 100%
     border: none
     padding: 0 5%
-    padding-left: calc($input_height + 20px)
-    // background-color: $input_background
+    padding-left: calc($input_height + 3vh)
     background-color: transparent
-    color: $primary_text_color
-    box-shadow: 0 0 15px -9px #000
-    font-size: 18px
+    color: $white_2
+    box-shadow: 0 0 15px -9px $black_2
+    font-size: 2.6vh
     font-weight: 500
     transition: border-color 0.15s
 
     &:focus
       outline: none
-      border-bottom-color: rgba($accent_color, 0.4)

@@ -1,6 +1,8 @@
+import { RequestType } from "./../commonDefinitions/miscCommonDefinitions";
+import { FetchPostMessageType } from "./../commonDefinitions/postMessageCommonDefinitions";
 import { parseTrack } from "../helpers/deezerDataHelper";
 import { put, takeLatest } from "redux-saga/effects";
-import { searchTrackApiCall } from "../helpers/deezerApiHelper";
+import { deezerApiRequest } from "../helpers/deezerApiHelper";
 import { changeSearchResult } from "../slices/searchSlice";
 import { isLiked } from "../utils/trackUtils";
 
@@ -24,7 +26,15 @@ export const searchTrack = (payload: SearchTrackPayload): SearchTrack => ({
 export function* searchTrackWatcher({ payload }: SearchTrack): any {
   const { query, startIndex } = payload;
 
-  yield searchTrackApiCall(query, startIndex);
+  const encodedQuery = encodeURIComponent(query);
+  yield deezerApiRequest(
+    FetchPostMessageType.SearchTrack,
+    `/search?q=${encodedQuery}&strict=off&order=RANKING&index=${startIndex}`,
+    {},
+    RequestType.Get,
+    {},
+    { query }
+  );
 }
 
 export default function* searchSaga() {

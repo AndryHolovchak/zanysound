@@ -4,34 +4,36 @@
   position: relative
 
   &__dots_container
-    padding: 0 10px
+    padding: 1vh
 
   &__icon
     font-size: 3vh
 
   &__items
+    @include with-blur()
     display: none
     position: absolute
     bottom: 0
     left: 0
     transform: translate(-100%, 100%)
-    border-radius: 8px
-    backdrop-filter: blur(16px)
-    background-color: #131313a2 
-    border: 1px solid #ffffff10
+    border-radius: 1vh
+    border: 1px solid $gray_1
 
     &--visible
       display: block
 
   &__item
+    display: flex
+    align-items: center
     width: 60vw
-    padding: 1.5vh 1vh
+    padding: 1.5vh
 
     & + &
-      border-top: 1px solid #ffffff1c
+      border-top: 1px solid $black_4
 
   &__item_icon
+    font-size: 2.5vh
     margin-right: 2vh
 
   &__item_text
-    color: #fff
+    font-size: 2.2vh

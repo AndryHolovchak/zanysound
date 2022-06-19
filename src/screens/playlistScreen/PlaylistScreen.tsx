@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { EllipsisText } from "../../components/EllipsisText/EllipsisText";
 import Icon from "../../components/Icon/Icon";
 import ScreenContainer from "../../components/ScreenContainer/ScreenContainer";
 import Tracklist from "../../components/Tracklist/Tracklist";
@@ -16,9 +17,7 @@ export const PlaylistScreen = () => {
   const playlistsTracks = useAppSelector(selectPlaylistsTracks);
 
   useEffect(() => {
-    // if (!playlistsTracks[id]) {
     dispatch(loadPlaylistTracksAction({ playlistId: id }));
-    // }
   }, [id]);
 
   const targetTracks = playlistsTracks[id];
@@ -37,7 +36,11 @@ export const PlaylistScreen = () => {
           <div className={styles.playlist_screen__head_icon_container} onClick={handleBackIconClick}>
             <Icon name="arrow-left" className={styles.playlist_screen__head_icon} />
           </div>
-          <span className={styles.playlist_screen__head_title}>{targetPlaylist.title}</span>
+          <EllipsisText
+            value={targetPlaylist.title}
+            className={styles.playlist_screen__head_title}
+            containerClassName={styles.playlist_screen__head_title_container}
+          />
         </div>
         <Tracklist
           tracks={targetTracks || []}
