@@ -1,9 +1,8 @@
 import classNames from "classnames";
-import React, { AnimationEvent, useContext, useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import React, { AnimationEvent, useContext, useState } from "react";
+import { useAppSelector } from "../../app/hooks";
 import PlayerContext from "../../contexts/playerContext";
 import { selectPlaylists } from "../../slices/contentSlice";
-import { selectPlayerPaused, selectPlayerTrack } from "../../slices/playerSlice";
 import { selectLikedTracksIds } from "../../slices/userSlice";
 import { EllipsisText } from "../EllipsisText/EllipsisText";
 import Icon from "../Icon/Icon";

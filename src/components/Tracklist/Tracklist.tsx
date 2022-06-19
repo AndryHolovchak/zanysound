@@ -3,9 +3,8 @@ import classNames from "classnames";
 import { PlaylistModel, TrackModel } from "../../commonTypes/deezerTypes";
 import Track from "../Track/Track";
 import style from "./tracklist.module.sass";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { changePlayerTrack } from "../../slices/playerSlice";
-import { selectLikedTracks, selectLikedTracksIds } from "../../slices/userSlice";
+import { useAppSelector } from "../../app/hooks";
+import { selectLikedTracksIds } from "../../slices/userSlice";
 import PlayerContext from "../../contexts/playerContext";
 
 export interface TracklistProps {

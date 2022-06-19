@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { Touch, TouchEventHandler, useContext, useEffect, useRef, useState } from "react";
+import React, { Touch, useContext, useEffect, useRef, useState } from "react";
 import { PlayerReadyState } from "../../commonDefinitions/playerCommonDefinitions";
 import PlayerContext from "../../contexts/playerContext";
 import { useForceUpdate } from "../../hooks/useForceUpdate";

@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { PlayerReadyState } from "../../commonDefinitions/playerCommonDefinitions";
-import { PostMessageType } from "../../commonDefinitions/postMessageCommonDefinitions";
 import { TrackModel } from "../../commonTypes/deezerTypes";
 import { PlayerContextValue } from "../../commonTypes/playerTypes";
 import PlayerContext, { PlayerProvider } from "../../contexts/playerContext";
 import { retrieveMp3UrlAction } from "../../sagas/mp3Saga";
 import { selectMp3Urls, selectVideoIds } from "../../slices/mp3Slice";
 import { shuffle } from "../../utils/arrayUtils";
-import { sendPostMessage } from "../../utils/postMessage";
 import { isExpired } from "../../utils/trackUtils";
-import { getSearchQuery } from "../../utils/youtubeUtils";
-
-let lastProgressUpdataTime = Date.now();
 
 export const PlayerContextProvider: React.FC = ({ children }) => {
   const dispatch = useAppDispatch();
@@ -73,7 +68,6 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
     if (audio) {
       audio.currentTime = time;
       setReadyState(PlayerReadyState.Seeking);
-      lastProgressUpdataTime = 0;
     }
   };
 
@@ -105,7 +99,6 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
   const next = () => {
     const nextTrackIndex = currentQueue.findIndex((e) => e.id === track?.id) + 1;
     const nextTrack = currentQueue[getValidTrackIndex(nextTrackIndex)];
-    lastProgressUpdataTime = 0;
 
     playMp3(nextTrack);
   };
@@ -113,7 +106,6 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
   const previous = () => {
     const nextTrackIndex = currentQueue.findIndex((e) => e.id === track?.id) - 1;
     const nextTrack = currentQueue[getValidTrackIndex(nextTrackIndex)];
-    lastProgressUpdataTime = 0;
 
     playMp3(nextTrack);
   };

@@ -1,4 +1,3 @@
-import { TrackModel } from "./../commonTypes/deezerTypes.d";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 

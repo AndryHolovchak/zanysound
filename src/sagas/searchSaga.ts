@@ -1,10 +1,7 @@
 import { RequestType } from "./../commonDefinitions/miscCommonDefinitions";
 import { FetchPostMessageType } from "./../commonDefinitions/postMessageCommonDefinitions";
-import { parseTrack } from "../helpers/deezerDataHelper";
-import { put, takeLatest } from "redux-saga/effects";
+import { takeLatest } from "redux-saga/effects";
 import { deezerApiRequest } from "../helpers/deezerApiHelper";
-import { changeSearchResult } from "../slices/searchSlice";
-import { isLiked } from "../utils/trackUtils";
 
 export const SEARCH_TRACK = "search/track";
 

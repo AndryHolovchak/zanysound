@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Button from "../../components/Button/Button";
 import ScreenContainer from "../../components/ScreenContainer/ScreenContainer";

@@ -1,11 +1,8 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { NotificationType } from "../../commonDefinitions/miscCommonDefinitions";
-import { PlaylistModel, TrackModel } from "../../commonTypes/deezerTypes";
+import { PlaylistModel } from "../../commonTypes/deezerTypes";
 import { addToPlaylistAction } from "../../sagas/contentSaga";
 import { selectPlaylists } from "../../slices/contentSlice";
-import { addNotification } from "../../slices/notificationSlice";
-import { createNotificationItem } from "../../utils/common";
 import { sortPlaylistsByDate } from "../../utils/sortingUtils";
 import { Modal } from "../Modal/Modal";
 import style from "./AddToPlaylistModal.module.sass";

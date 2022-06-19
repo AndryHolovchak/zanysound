@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { EllipsisText } from "../../components/EllipsisText/EllipsisText";
 import Icon from "../../components/Icon/Icon";

@@ -16,7 +16,6 @@ import searchSlice from "../slices/searchSlice";
 import rootSaga from "../sagas/rootSaga";
 import userSlice from "../slices/userSlice";
 import mp3Slice from "./../slices/mp3Slice";
-import playerSlice from "./../slices/playerSlice";
 import contentSlice from "./../slices/contentSlice";
 import notificationSlice from "../slices/notificationSlice";
 
@@ -32,7 +31,6 @@ const rootReducer = combineReducers({
   search: searchSlice,
   user: userSlice,
   mp3: mp3Slice,
-  player: playerSlice,
   content: contentSlice,
   notification: notificationSlice,
 });

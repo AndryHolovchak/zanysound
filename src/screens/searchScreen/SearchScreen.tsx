@@ -1,4 +1,4 @@
-import React, { KeyboardEventHandler, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import Icon from "../../components/Icon/Icon";
 import { IconType } from "../../components/Icon/iconCommonDefinition";

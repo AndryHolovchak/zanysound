@@ -1,29 +1,13 @@
 import { Notification, NotificationsCollection } from "./../commonTypes/miscTypes.d";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
-import { NotificationType } from "../commonDefinitions/miscCommonDefinitions";
 
 export interface NotificationState {
   items: NotificationsCollection;
 }
 
 const initialState: NotificationState = {
-  items: {
-    // "0": {
-    //   id: "0",
-    //   type: NotificationType.Error,
-    //   text: "Track is already in the playlist",
-    //   timestamp: 1213,
-    //   lifetime: 54654,
-    // },
-    // "1": {
-    //   id: "1",
-    //   type: NotificationType.Success,
-    //   text: "Track added",
-    //   timestamp: 1213,
-    //   lifetime: 54654,
-    // },
-  },
+  items: {},
 };
 
 export const notificationSlice = createSlice({

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { NotificationType } from "../../commonDefinitions/miscCommonDefinitions";
-import { PlaylistModel } from "../../commonTypes/deezerTypes";
 import { Playlists } from "../../commonTypes/miscTypes";
 import Button from "../../components/Button/Button";
 import Icon from "../../components/Icon/Icon";
