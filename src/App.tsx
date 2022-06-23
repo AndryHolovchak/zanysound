@@ -19,6 +19,7 @@ import { createNotificationItem } from "./utils/common";
 import { addNotification } from "./slices/notificationSlice";
 import { NotificationHub } from "./components/NotificationsHub/NotificationHub";
 import { ProfileScreen } from "./screens/profileScreen/ProfileScreen";
+import { DesktopScreen } from "./screens/desktopScreen/DesktopScreen";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -63,6 +64,10 @@ function App() {
       dispatch(loadBasicUserInfo());
     }
   }, [deezerToken]);
+
+  if (!isMobile) {
+    return <DesktopScreen />;
+  }
 
   if (!deezerToken) {
     return (
