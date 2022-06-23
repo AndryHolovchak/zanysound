@@ -50,7 +50,7 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
   const { message } = payload;
 
   const parsed: PostMessageResponse = typeof message.data === "string" ? JSON.parse(message.data) : message.data;
-
+  console.log(parsed);
   const { initiator, response } = parsed;
   const networkError = parsed.networkError;
 
