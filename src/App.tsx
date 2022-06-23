@@ -4,19 +4,16 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import LikedScreen from "./screens/likedScreen/LikedScreen";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { changeIsMobileEnv, selectIsMobileEnv } from "./slices/appSlice";
-import { changeDeezerToken, selectDeezerToken } from "./slices/deezerSlice";
+import { selectDeezerToken } from "./slices/deezerSlice";
 import SearchScreen from "./screens/searchScreen/SearchScreen";
 import { loadBasicUserInfo } from "./sagas/userSaga";
 import { WelcomeScreen } from "./screens/WelcomeScreen/WelcomeScreen";
 import { CollectionScreen } from "./screens/collectionScreen/CollectionScreen";
 import { PlaylistScreen } from "./screens/playlistScreen/PlaylistScreen";
 import { RecommendedScreen } from "./screens/recommendedScreen/RecommendedScreen";
-import { deezerApiRequest } from "./helpers/deezerApiHelper";
 import { CallbackScreen } from "./screens/callbackScreen/CallbackScreen";
 import { handlePostMessageAction } from "./sagas/postMessageSaga";
 import { PlayerContextProvider } from "./components/PlayerContextProvider/PlayerContextProvider";
-import { createNotificationItem } from "./utils/common";
-import { addNotification } from "./slices/notificationSlice";
 import { NotificationHub } from "./components/NotificationsHub/NotificationHub";
 import { ProfileScreen } from "./screens/profileScreen/ProfileScreen";
 import { DesktopScreen } from "./screens/desktopScreen/DesktopScreen";
@@ -33,9 +30,6 @@ function App() {
       dispatch(changeIsMobileEnv(!isMobile));
     }
   }, [isMobile, dispatch]);
-
-  //
-  useEffect(() => {}, []);
 
   //update isMobile value on resize
   useEffect(() => {

@@ -6,7 +6,7 @@ export interface DeezerState {
 }
 
 const initialState: DeezerState = {
-  token: "fr0P5wwenb9sKu523vT6rCFPetPrvXJiZx3wqpbj9mI94aD9jN",
+  token: "",
 };
 
 export const deezerSlice = createSlice({
