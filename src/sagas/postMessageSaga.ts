@@ -49,12 +49,12 @@ export const handlePostMessageAction = (payload: HandlePostMessagePayload): Hand
 export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
   const { message } = payload;
 
-  const parsed: PostMessageResponse = JSON.parse(message.data);
+  const parsed: PostMessageResponse = typeof message.data === "string" ? JSON.parse(message.data) : message.data;
+
   const { initiator, response } = parsed;
   const networkError = parsed.networkError;
 
   if (networkError) {
-    console.log("Network Error");
     yield put(addNotification(createNotificationItem(NotificationType.Error, "No internet connection")));
     return;
   }
@@ -62,7 +62,6 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
   //hande fetch response
   if (initiator.type === PostMessageType.Fetch) {
     const initiatorPayload = initiator.payload as PostMessageFetchPayload;
-
     switch (initiatorPayload.type) {
       case FetchPostMessageType.GetUserInfo:
         yield handleGetUserInfo(response);
