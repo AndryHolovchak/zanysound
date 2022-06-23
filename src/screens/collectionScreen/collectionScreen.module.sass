@@ -1,17 +1,53 @@
 @import '../../styles'
 
 .collection_screen
-  height: 100%
-  overflow-y: auto
+  padding: 2vh
 
   &__new_button
     display: flex
     align-items: center
+    height: 15vh
+
+  &__new_button_icon_container
+    display: flex
+    align-items: center
     justify-content: center
-    width: 64px
-    height: 64px
-    border-radius: 8px
-    background-color: #628d61
+    width: 13vh
+    height: 13vh
+    margin-right: 2vh
+    border-radius: 1vh
+    background-color: $black_0
+    border: 1px solid $gray_1
 
   &__new_button_icon
-    font-size: 30px
+    font-size: 5vh
+    color: $green_0
+
+  &__new_button_right_side
+    display: flex
+    align-items: center
+    flex: 1
+    height: 100%
+
+  &__new_button_text
+    font-size: 2.4vh
+    font-weight: 500
+    color: $green_0
+
+
+.new_playlist_modal
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  width: 80vw
+  padding: 3.5vh
+  border-radius: 1vh
+  border: 1px solid $gray_1
+  background-color: $black_0
+
+  &__input
+    margin-bottom: 2vh
+
+  &__button
+    width: 80%

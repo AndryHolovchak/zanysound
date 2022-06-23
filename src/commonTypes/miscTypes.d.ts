@@ -1,3 +1,4 @@
+import { NotificationType } from "./../commonDefinitions/miscCommonDefinitions";
 import { AsyncContent } from "./miscTypes.d";
 import { TrackModel, PlaylistModel } from "./deezerTypes.d";
 import { AsyncContentState } from "../commonDefinitions/miscCommonDefinitions";
@@ -29,8 +30,8 @@ export interface NotificationsCollection {
 
 export type Notification = {
   id: string;
-  title: string;
-  text?: string;
+  type: NotificationType;
+  text: string;
   timestamp: number;
   lifetime: number;
 };

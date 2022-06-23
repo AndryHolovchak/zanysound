@@ -1,4 +1,3 @@
-import { TrackModel } from "./../commonTypes/deezerTypes.d";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 
@@ -7,9 +6,7 @@ export interface DeezerState {
 }
 
 const initialState: DeezerState = {
-  // token: "frA3ukhBZ8NjZMloYtiBcYxN8Pj56UMd69MGAEOcNlxb2GnBR7",
-  // token: "",
-  token: "fr0P5wwenb9sKu523vT6rCFPetPrvXJiZx3wqpbj9mI94aD9jN",
+  token: "",
 };
 
 export const deezerSlice = createSlice({

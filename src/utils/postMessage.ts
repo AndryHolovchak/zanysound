@@ -1,9 +1,7 @@
 import { put } from "redux-saga/effects";
 import { handlePostMessageAction } from "./../sagas/postMessageSaga";
-import { store } from "../app/store";
 import { PostMessage } from "../commonTypes/postMessageTypes";
-
-const backendUrl = "http://localhost:3001/";
+import config from "../config/config";
 
 export function* sendPostMessage(message: PostMessage): any {
   //@ts-ignore
@@ -17,7 +15,11 @@ export function* sendPostMessage(message: PostMessage): any {
     };
 
     try {
-      const response: Response = yield fetch(backendUrl, { method: "POST", body: JSON.stringify(message), headers });
+      const response: Response = yield fetch(config.BACKEND_URL, {
+        method: "POST",
+        body: JSON.stringify(message),
+        headers,
+      });
       const json: any = yield response.json();
 
       yield put(

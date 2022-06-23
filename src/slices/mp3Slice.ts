@@ -1,4 +1,4 @@
-import { Mp3Url, Mp3UrlCollection, VideoIdsCollection } from "./../commonTypes/miscTypes.d";
+import { Mp3UrlCollection, VideoIdsCollection } from "./../commonTypes/miscTypes.d";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 

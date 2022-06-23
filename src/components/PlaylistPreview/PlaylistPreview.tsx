@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { PlaylistModel } from "../../commonTypes/deezerTypes";
 import { deletePlaylistAction } from "../../sagas/contentSaga";
+import { EllipsisText } from "../EllipsisText/EllipsisText";
 import Icon from "../Icon/Icon";
 import styles from "./playlistPreview.module.sass";
 
@@ -27,9 +28,13 @@ export const PlaylistPreview = ({ playlistModel }: PlaylistPreviewProps) => {
     <div className={styles.playlist_preview} onClick={handleClick}>
       <img className={styles.playlist_preview__cover} src={playlistModel.xlPicture} alt="" />
       <div className={styles.playlist_preview__right_side}>
-        <span className={styles.playlist_preview__title}>{playlistModel.title}</span>
+        <EllipsisText
+          value={playlistModel.title}
+          className={styles.playlist_preview__title}
+          containerClassName={styles.playlist_preview__title_container}
+        />
+        <Icon name="trash" className={styles.playlist_preview__delete_icon} onClick={handleDeleteIconClick} />
       </div>
-      <Icon name="trash" className={styles.playlist_preview__delete_icon} onClick={handleDeleteIconClick} />
     </div>
   );
 };

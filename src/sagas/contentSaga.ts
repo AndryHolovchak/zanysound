@@ -1,20 +1,7 @@
-import { TrackModel } from "./../commonTypes/deezerTypes.d";
-import {
-  addToPlaylistApiCall,
-  createNewPlaylistApiCall,
-  deletePlaylistApiCall,
-  getPlaylistInfoApiCall,
-  getPlaylistTracks,
-  loadRecommendedTracksApiCall,
-  removeFromPlaylistApiCall,
-} from "./../helpers/deezerApiHelper";
-import { PlaylistsTracks } from "./../commonTypes/miscTypes.d";
-import { parseTrack } from "../helpers/deezerDataHelper";
-import { put, select, takeLatest } from "redux-saga/effects";
-import { searchTrackApiCall } from "../helpers/deezerApiHelper";
-import { changeSearchResult } from "../slices/searchSlice";
-import { isLiked } from "../utils/trackUtils";
-import { changePlaylistsTracks, changeRecommendedTracks, selectPlaylistsTracks } from "../slices/contentSlice";
+import { FetchPostMessageType } from "./../commonDefinitions/postMessageCommonDefinitions";
+import { RequestType } from "./../commonDefinitions/miscCommonDefinitions";
+import { deezerApiRequest } from "./../helpers/deezerApiHelper";
+import { takeLatest } from "redux-saga/effects";
 
 export const LOAD_PLAYLIST_TRACKS = "content/load/playlistTracks";
 export const LOAD_RECOMMENDED_TRACKS = "content/load/recommendedTracks";
@@ -126,43 +113,53 @@ export const removeFromPlaylistAction = (payload: RemoveFromPlaylistPayload): Re
 
 function* loadPlaylistTracksWatcher({ payload }: LoadPlaylistTracks): any {
   const { playlistId } = payload;
-  yield getPlaylistTracks(playlistId);
+  yield deezerApiRequest(FetchPostMessageType.GetPlaylistTracks, `/playlist/${playlistId}`);
 }
 
 function* loadRecommendedTracksWatcher({ payload }: LoadRecommendedTracks): any {
   const { startIndex } = payload;
-
-  yield loadRecommendedTracksApiCall(startIndex);
+  yield deezerApiRequest(
+    FetchPostMessageType.LoadRecommendedTracks,
+    `/user/me/recommendations/tracks?index=${startIndex}`
+  );
 }
 
 function* createNewPlaylistWatcher({ payload }: CreateNewPlaylist) {
   const { title } = payload;
-
-  yield createNewPlaylistApiCall(title);
+  yield deezerApiRequest(FetchPostMessageType.CreateNewPlaylist, "/user/me/playlists", { title }, RequestType.Post);
 }
 
 function* loadPlaylistInfoWatcher({ payload }: LoadPlaylistInfo) {
   const { playlistId } = payload;
-
-  yield getPlaylistInfoApiCall(playlistId);
+  yield deezerApiRequest(FetchPostMessageType.GetPlaylistInfo, `/playlist/${playlistId}`);
 }
 
 function* deletePlaylistWatcher({ payload }: DeletePlaylist) {
   const { playlistId } = payload;
 
-  yield deletePlaylistApiCall(playlistId);
+  yield deezerApiRequest(FetchPostMessageType.DeletePlaylist, `/playlist/${playlistId}`, {}, RequestType.Delete);
 }
 
 function* addToPlaylistWatcher({ payload }: AddToPlaylist) {
   const { trackId, playlistId } = payload;
 
-  yield addToPlaylistApiCall(trackId, playlistId);
+  yield deezerApiRequest(
+    FetchPostMessageType.AddToPlaylist,
+    `/playlist/${playlistId}/tracks`,
+    { songs: [trackId] },
+    RequestType.Post
+  );
 }
 
 function* removeFromPlaylistWatcher({ payload }: RemoveFromPlaylist) {
   const { trackId, playlistId } = payload;
 
-  yield removeFromPlaylistApiCall(trackId, playlistId);
+  yield deezerApiRequest(
+    FetchPostMessageType.RemoveFromPlaylist,
+    `/playlist/${playlistId}/tracks`,
+    { songs: [trackId] },
+    RequestType.Delete
+  );
 }
 
 export default function* contentSaga() {

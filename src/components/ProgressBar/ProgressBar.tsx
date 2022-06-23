@@ -1,15 +1,31 @@
-import React, { Touch, TouchEventHandler, useContext, useEffect, useRef, useState } from "react";
+import classNames from "classnames";
+import React, { Touch, useContext, useEffect, useRef, useState } from "react";
 import { PlayerReadyState } from "../../commonDefinitions/playerCommonDefinitions";
 import PlayerContext from "../../contexts/playerContext";
+import { useForceUpdate } from "../../hooks/useForceUpdate";
 import { sec2MMSS } from "../../utils/timeUtils";
 import style from "./ProgressBar.module.sass";
 import { SeekingState } from "./static/progressBarCommonDefinition";
 
-export const ProgressBar = () => {
+export interface ProgressBarProps {
+  className?: string;
+}
+
+export const ProgressBar = ({ className }: ProgressBarProps) => {
   const playerContext = useContext(PlayerContext);
   const [seekingState, setSeekingState] = useState(SeekingState.None);
   const [selectedTime, setSelectedTime] = useState(0);
+  const forceUpdate = useForceUpdate();
+
   const lineContainerRef = useRef<HTMLDivElement>(null);
+
+  // start time
+  useEffect(() => {
+    const callback = () => forceUpdate();
+    const id = setInterval(callback, 500);
+
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     if (seekingState === SeekingState.Finished && playerContext.readyState === PlayerReadyState.Ready) {
@@ -23,7 +39,10 @@ export const ProgressBar = () => {
     }
 
     const lineContainerRect = lineContainerRef.current.getBoundingClientRect();
-    const selectedPosition = Math.max(0, Math.min(touch.clientX - lineContainerRect.left, lineContainerRef.current.clientWidth));
+    const selectedPosition = Math.max(
+      0,
+      Math.min(touch.clientX - lineContainerRect.left, lineContainerRef.current.clientWidth)
+    );
     const selectedInPercentages = selectedPosition / lineContainerRef.current.clientWidth;
 
     return duration * selectedInPercentages;
@@ -44,7 +63,7 @@ export const ProgressBar = () => {
   };
 
   const duration = playerContext.duration;
-  const progress = playerContext.progress;
+  const progress = playerContext.getProgress();
 
   let lineWidth = "0%";
 
@@ -56,12 +75,11 @@ export const ProgressBar = () => {
     }
   }
 
+  const finalClassName = classNames([style.progress_bar, className]);
+
   return (
-    <div className={style.progress_bar}>
-      <div className={style.progress_bar__top}>
-        <div className={style.progress_bar__progress}>{sec2MMSS(seekingState ? selectedTime : progress)}</div>
-        <div className={style.progress_bar__duration}>{sec2MMSS(duration)}</div>
-      </div>
+    <div className={finalClassName}>
+      <div className={style.progress_bar__progress}>{sec2MMSS(seekingState ? selectedTime : progress)}</div>
       <div
         className={style.progress_bar__line_container}
         ref={lineContainerRef}
@@ -71,6 +89,7 @@ export const ProgressBar = () => {
       >
         <div className={style.progress_bar__line} style={{ width: lineWidth }} />
       </div>
+      <div className={style.progress_bar__duration}>{sec2MMSS(duration)}</div>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 
 export interface SearchState {
-  result: TrackModel[];
+  result: TrackModel[] | null;
   resultId: string;
 }
 
@@ -16,11 +16,11 @@ export const searchSlice = createSlice({
   name: "search",
   initialState,
   reducers: {
-    changeSearchResult: (state, action: PayloadAction<TrackModel[]>) => {
-      state.result = [...action.payload];
+    changeSearchResult: (state, action: PayloadAction<TrackModel[] | null>) => {
+      state.result = action.payload ? [...action.payload] : action.payload;
     },
     addSearchResult: (state, action: PayloadAction<TrackModel[]>) => {
-      state.result = [...state.result, ...action.payload];
+      state.result = [...(state.result || []), ...action.payload];
     },
     changeSearchResultId: (state, action: PayloadAction<string>) => {
       state.resultId = action.payload;

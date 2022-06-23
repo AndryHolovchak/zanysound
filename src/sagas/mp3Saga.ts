@@ -1,11 +1,8 @@
 import { getSearchQuery } from "./../utils/youtubeUtils";
 import { PostMessageType } from "./../commonDefinitions/postMessageCommonDefinitions";
 import { TrackModel } from "./../commonTypes/deezerTypes.d";
-import { Mp3Url } from "./../commonTypes/miscTypes.d";
-import { put, select, takeLatest } from "redux-saga/effects";
-import config from "../config/config";
-import { object2queryParams } from "../utils/urlUtils";
-import { selectVideoIds, setMp3Url } from "../slices/mp3Slice";
+import { select, takeLatest } from "redux-saga/effects";
+import { selectVideoIds } from "../slices/mp3Slice";
 import { sendPostMessage } from "../utils/postMessage";
 
 export const RETRIEVE_MP3_URL = "mp3/retrieve/url";

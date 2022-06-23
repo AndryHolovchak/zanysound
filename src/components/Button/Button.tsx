@@ -4,15 +4,16 @@ import style from "./button.module.sass";
 
 export interface ButtonProps {
   title: string;
+  disabled?: boolean;
   className?: string;
   onCLick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-const Button: React.FC<ButtonProps> = ({ title, className, onCLick }) => {
+const Button: React.FC<ButtonProps> = ({ title, disabled, className, onCLick }) => {
   const finalStyle = classNames([style.button, className]);
 
   return (
-    <button className={finalStyle} onClick={onCLick}>
+    <button disabled={disabled} className={finalStyle} onClick={onCLick}>
       {title}
     </button>
   );

@@ -1,15 +1,19 @@
 import { searchTrack } from "./searchSaga";
-import { changeUserEmail, changeUserName, changeUserPicture, selectLikedTracks, selectLikedTracksIds } from "./../slices/userSlice";
+import {
+  changeUserEmail,
+  changeUserName,
+  changeUserPicture,
+  selectLikedTracks,
+  selectLikedTracksIds,
+} from "./../slices/userSlice";
 import { loadPlaylistInfoAction, loadPlaylistTracksAction, loadRecommendedTracksAction } from "./contentSaga";
 import { copyObject, createNotificationItem, generateId } from "./../utils/common";
-import { getPlaylistTracks } from "./../helpers/deezerApiHelper";
 import { Playlists, PlaylistsTracks } from "./../commonTypes/miscTypes.d";
 import {
   selectPlaylists,
   changePlaylists,
   selectPlaylistsTracks,
   changePlaylistsTracks,
-  changeRecommendedTracks,
   selectRecommendedTracks,
   addRecommendedTracks,
 } from "./../slices/contentSlice";
@@ -24,6 +28,7 @@ import { changeLikedTracks, changeLikedTracksIds } from "../slices/userSlice";
 import { setMp3Url, setVideoId } from "../slices/mp3Slice";
 import { addNotification } from "../slices/notificationSlice";
 import config from "../config/config";
+import { NotificationType } from "../commonDefinitions/miscCommonDefinitions";
 
 const HANDLE_POST_MESSAGE = "postMessage/handle";
 
@@ -44,20 +49,19 @@ export const handlePostMessageAction = (payload: HandlePostMessagePayload): Hand
 export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
   const { message } = payload;
 
-  const parsed: PostMessageResponse = JSON.parse(message.data);
+  const parsed: PostMessageResponse = typeof message.data === "string" ? JSON.parse(message.data) : message.data;
+  console.log(parsed);
   const { initiator, response } = parsed;
   const networkError = parsed.networkError;
 
   if (networkError) {
-    console.log("Network Error");
-    yield put(addNotification(createNotificationItem("Error", "No internet connection")));
+    yield put(addNotification(createNotificationItem(NotificationType.Error, "No internet connection")));
     return;
   }
 
   //hande fetch response
   if (initiator.type === PostMessageType.Fetch) {
     const initiatorPayload = initiator.payload as PostMessageFetchPayload;
-
     switch (initiatorPayload.type) {
       case FetchPostMessageType.GetUserInfo:
         yield handleGetUserInfo(response);
@@ -100,7 +104,6 @@ export function* handlePostMessageWatcher({ payload }: HandlePostMessage): any {
 }
 
 function* handleGetUserInfo(response: any) {
-  console.log(response);
   const { name, email, picture_xl } = response;
 
   yield put(changeUserName(name));
@@ -133,7 +136,7 @@ function* handleGetUserPlaylist(response: any[]) {
 
   //load liked tracks
   if (likedPlaylist) {
-    yield getPlaylistTracks(likedPlaylist.id);
+    yield put(loadPlaylistTracksAction({ playlistId: likedPlaylist.id }));
   }
 }
 
@@ -168,6 +171,11 @@ function* handleSearchTrack(initiator: PostMessage, response: any) {
 
   if (!searchResult.length) {
     yield put(changeSearchResultId(generateId()));
+  }
+
+  if (!response.data.length) {
+    yield put(changeSearchResult(null));
+    return;
   }
 
   yield put(addSearchResult(response.data.map((e: any) => parseTrack(e))));
@@ -239,8 +247,9 @@ function* handlePlaylistTracksChangeResponse(initiator: PostMessage, response: a
     console.log(playlistId);
 
     yield put(loadPlaylistTracksAction({ playlistId }));
+    yield put(addNotification(createNotificationItem(NotificationType.Success, "Track added to the playlist")));
   } else {
-    yield put(addNotification(createNotificationItem("Track is already in this playlist")));
+    yield put(addNotification(createNotificationItem(NotificationType.Error, "Track is already in this playlist")));
   }
 }
 

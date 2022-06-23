@@ -1,29 +1,32 @@
 @import '../../styles'
 
-.player
+.compact_player
   display: flex
-  flex-direction: column
-  padding: 2vh 5vw
-  background-color: #101113
+  align-items: center
+  padding: 2vh
+  height: $compact_player_height
 
-  &__bottom
-    flex: 1
+  &__left
     display: flex
     align-items: center
+    width: 55%
 
   &__cover
-    width: 8vh
-    height: 8vh
-    border-radius: 8px
+    width: 7vh
+    height: 7vh
+    border-radius: 1vh
+    box-shadow: 0 0 13px -4px $black_2
     margin-right: 5%
 
   &__main_info
     display: flex
     flex-direction: column
+    width: 100%
 
   &__title
-    color: $primary_text_color
-  
+    font-size: 2.2vh
+    color: $white_2
+
   &__artist
     color: $gray
     font-size: 2vh
@@ -35,22 +38,144 @@
     margin-left: auto
     margin-right: 2vh
 
-  &__queue_control
-    font-size: 4vh
-
-  &__mode_control
-    font-size: 3vh
-
-    &--active
-      color: #80e2ac
-
   &__toggle_play
     font-size: 3.5vh
-    margin: 0 5vh
+    margin-right: 3vh
+  
+  &__queue_control
+    font-size: 3vh
 
-  &__shuffle
-    width: 3vh
-    height: 3vh
+.full_size_player
+  position: fixed
+  bottom: 0
+  left: 0
+  z-index: 1
+  display: flex
+  flex-direction: column
+  align-items: center
+  width: 100vw
+  height: calc(100vh - env(safe-area-inset-bottom))
+  padding: 3vh
+  padding-top: 0
+  animation: show-full-size-player 0.2s
+  background-color: $black_3
+
+  &--hiding
+    animation: hide-full-size-player 0.2s
+    
+  &__hide_click_area
+    position: relative
+    width: 100vh
+    height: 10vh
+
+  &__close_button
+    position: absolute
+    top: 20%
+    left: 50%
+    transform: translateX(-50%)
+    font-size: 5vh
+
+  &__background
+    position: absolute
+    top: 50%
+    left: 50%
+    z-index: -1
+    transform: translate(-50%, -50%) translateZ(0) // slow performance (translateZ)
+    filter: blur(60px) contrast(0.8) brightness(0.4)
+    -webkit-perspective: 1000 // fix for slow performance
+
+  &__cover
+    width: 40vh
+    border-radius: 1.2vh
+    margin-bottom: 2vh
+    box-shadow: 0 0 20px -10px black
+
+  &__top_section
+    position: relative
+    display: flex
+    align-items: center
+    justify-content: space-between
+    width: 100%
+
+  &__top_section_text
+    width: 70%
+    display: flex
+    flex-direction: column
+
+  &__track_buttons
+    display: flex
+    align-items: center
+
+  &__title
+    font-size: 3vh
+    font-weight: 500
+    color: $gray_3
+  
+  &__artist
+    font-size: 2.2vh
+    color: $gray_3
+    opacity: 0.6
+
+  &__like
+    font-size: 3vh
+    margin-right: 2vh
+  
+  &__popup_icon
+    font-size: 3.5vh
+
+  &__progress_bar
+    width: 100%
+    margin-top: 12vh
+
+  &__mode_controls
+    display: flex
+    align-items: center
+    justify-content: space-between
+    width: 100%
+    margin-top: 2.5vh
+
+  &__mode_font_icon
+    color: $white
+    font-size: 3vh
+
+  &__mode_svg_icon
+    width: 3.2vh
+    height: 3.2vh
+
+  &__mode_icon
+    opacity: 0.5
 
     &--active
-      filter: invert(48%) sepia(13%) saturate(3207%) hue-rotate(130deg) brightness(95%) contrast(80%)
+      opacity: 1
+
+  &__main_controls
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 100%
+    margin-top: 4vh
+
+  &__prev_button,
+  &__next_button
+    font-size: 5vh
+
+  &__toggle_play
+    font-size: 6vh
+    margin: 0 14vw
+
+
+@keyframes show-full-size-player
+  from
+    opacity: 0
+    transform: translateY(100%)
+  to
+    opacity: 1
+    transform: translateY(0)
+
+@keyframes hide-full-size-player
+  from
+    opacity: 1
+    transform: translateY(0)
+  to
+    opacity: 0
+    transform: translateY(100%)

@@ -1,22 +1,21 @@
-@import "../../../styles/"
+@import "../../styles/"
 
 .mobile_menu
     display: flex
     flex-direction: row
-    height: 6vh
-    background-color: $menu_background
-
+    height: $menu_height
+    
     &__item
         flex: 1
         display: flex
         justify-content: center
         align-items: center
         padding: 2% 0
-        color: $primary_text_color
+        color: $white_2
         cursor: pointer
 
         &--active
-            color: $accent_color
+            color: $green_0
 
             .mobile_menu__item_icon
                 color: inherit

@@ -1,7 +1,6 @@
-import { PlaylistsTracks } from "./../commonTypes/miscTypes.d";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
-import { PlaylistModel, TrackModel } from "../commonTypes/deezerTypes";
+import { TrackModel } from "../commonTypes/deezerTypes";
 
 export interface UserState {
   name: string;
@@ -41,7 +40,8 @@ export const userSlice = createSlice({
   },
 });
 
-export const { changeUserName, changeUserEmail, changeUserPicture, changeLikedTracks, changeLikedTracksIds } = userSlice.actions;
+export const { changeUserName, changeUserEmail, changeUserPicture, changeLikedTracks, changeLikedTracksIds } =
+  userSlice.actions;
 
 export const selectUserName = (state: RootState) => state.user.name;
 export const selectUserEmail = (state: RootState) => state.user.email;

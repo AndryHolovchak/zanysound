@@ -1,6 +1,6 @@
 import React from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { PlaylistModel, TrackModel } from "../../commonTypes/deezerTypes";
+import { PlaylistModel } from "../../commonTypes/deezerTypes";
 import { addToPlaylistAction } from "../../sagas/contentSaga";
 import { selectPlaylists } from "../../slices/contentSlice";
 import { sortPlaylistsByDate } from "../../utils/sortingUtils";
@@ -12,7 +12,7 @@ export interface AddToPlaylistModalProps {
   onClose: () => void;
 }
 
-export const AddToPlaylistModa = ({ trackId, onClose }: AddToPlaylistModalProps) => {
+export const AddToPlaylistModal = ({ trackId, onClose }: AddToPlaylistModalProps) => {
   const dispatch = useAppDispatch();
 
   const playlistsCollection = useAppSelector(selectPlaylists);
@@ -27,7 +27,7 @@ export const AddToPlaylistModa = ({ trackId, onClose }: AddToPlaylistModalProps)
     <Modal onClose={onClose}>
       <div className={style.add_to_playlist_modal}>
         {Object.values(playlists).map((playlist) => (
-          <ModalItem key={playlist.id} title={playlist.title} onClick={() => handlePlaylistClick(playlist)} />
+          <ModalItem key={playlist.id} playlist={playlist} onClick={() => handlePlaylistClick(playlist)} />
         ))}
       </div>
     </Modal>
@@ -35,14 +35,15 @@ export const AddToPlaylistModa = ({ trackId, onClose }: AddToPlaylistModalProps)
 };
 
 interface ModalItemProps {
-  title: string;
+  playlist: PlaylistModel;
   onClick: () => void;
 }
 
-const ModalItem = ({ title, onClick }: ModalItemProps) => {
+const ModalItem = ({ playlist, onClick }: ModalItemProps) => {
   return (
     <div className={style.modal_item} onClick={onClick}>
-      <span className={style.modal_item__title}>{title}</span>
+      <img src={playlist.xlPicture} className={style.modal_item__cover} />
+      <span className={style.modal_item__title}>{playlist.title}</span>
     </div>
   );
 };

@@ -3,9 +3,8 @@ import classNames from "classnames";
 import { PlaylistModel, TrackModel } from "../../commonTypes/deezerTypes";
 import Track from "../Track/Track";
 import style from "./tracklist.module.sass";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { changePlayerTrack } from "../../slices/playerSlice";
-import { selectLikedTracks, selectLikedTracksIds } from "../../slices/userSlice";
+import { useAppSelector } from "../../app/hooks";
+import { selectLikedTracksIds } from "../../slices/userSlice";
 import PlayerContext from "../../contexts/playerContext";
 
 export interface TracklistProps {
@@ -41,19 +40,17 @@ const Tracklist: React.FC<TracklistProps> = ({ id, tracks, className, parentPlay
 
   return (
     <div className={finalClassName}>
-      <div className={style.tracklist__inner}>
-        {tracks.map((e) => (
-          <Track
-            parentPlaylist={parentPlaylist}
-            playing={player.track?.id === e.id}
-            key={e.id}
-            liked={likedTracksIds.includes(e.id)}
-            model={e}
-            onClick={() => handleTrackClick(e)}
-            className={style.tracklist__track}
-          />
-        ))}
-      </div>
+      {tracks.map((e) => (
+        <Track
+          parentPlaylist={parentPlaylist}
+          playing={player.tracklistId === id && player.track?.id === e.id}
+          key={e.id}
+          liked={likedTracksIds.includes(e.id)}
+          model={e}
+          onClick={() => handleTrackClick(e)}
+          className={style.tracklist__track}
+        />
+      ))}
     </div>
   );
 };
