@@ -11,3 +11,8 @@ Open the browser's dev tools and select mobile view, because the desktop version
 ### Environment variables
 
 REACT_APP_BACKEND_URL - [back-end URL](https://github.com/AndryHolovchak/zanysound-backend)
+
+# Screenshots
+
+![player](./player.png)
+![search](./search.png)
