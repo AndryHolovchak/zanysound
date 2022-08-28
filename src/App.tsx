@@ -45,7 +45,7 @@ function App() {
   //set post message handler
   useEffect(() => {
     window.addEventListener("message", (message) => {
-      if (!message.data.source?.includes("@devtools") && message.data.type !== "webpackWarnings") {
+      if (!message.data.source?.includes("devtools") && message.data.type !== "webpackWarnings") {
         dispatch(handlePostMessageAction({ message }));
       }
     });
