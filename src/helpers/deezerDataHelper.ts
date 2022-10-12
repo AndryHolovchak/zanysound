@@ -27,11 +27,8 @@ export const parseTrack = (trackFromApi: any): TrackModel => {
     album,
     artist,
     id: trackId,
-    rank: trackFromApi.rank,
     title: trackFromApi.title,
     duration: trackFromApi.duration,
-    shortTitle: trackFromApi.title_short,
-    explicitLyrics: trackFromApi.explicit_lyrics,
   };
 };
 

@@ -4,6 +4,7 @@ import { PlayerReadyState } from "../../commonDefinitions/playerCommonDefinition
 import { TrackModel } from "../../commonTypes/deezerTypes";
 import { PlayerContextValue } from "../../commonTypes/playerTypes";
 import PlayerContext, { PlayerProvider } from "../../contexts/playerContext";
+import MediaSessionController from "../../helpers/MediaSessionController";
 import { retrieveMp3UrlAction } from "../../sagas/mp3Saga";
 import { selectMp3Urls, selectVideoIds } from "../../slices/mp3Slice";
 import { shuffle } from "../../utils/arrayUtils";
@@ -24,6 +25,7 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
   const [shuffled, setShuffled] = useState(false);
   const [duration, setDuration] = useState(0);
   const [readyState, setReadyState] = useState(PlayerReadyState.Waiting);
+  const [mediaSessionController, setMediaSessionController] = useState<MediaSessionController | null>(null);
 
   useEffect(() => {
     const audioEleme = document.createElement("audio");
@@ -38,6 +40,16 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
     audioEleme.oncanplay = () => setReadyState(PlayerReadyState.Ready);
 
     setAudio(audioEleme);
+
+    setMediaSessionController(
+      new MediaSessionController({
+        onPlay: audioEleme.play,
+        onPause: audioEleme.pause,
+        onPlayNext: () => console.log("next"),
+        onPlayPrevious: previous,
+        onSeek: (time: number) => {},
+      })
+    );
   }, []);
 
   useEffect(() => {
@@ -149,6 +161,7 @@ export const PlayerContextProvider: React.FC = ({ children }) => {
     if (targetUrl && !isExpired(targetUrl)) {
       audio?.setAttribute("src", targetUrl);
       audio?.play();
+      mediaSessionController?.updateMedatada(targetTrack, true);
       // audio?.volume && (audio.volume = 0);
     } else {
       dispatch(retrieveMp3UrlAction({ track: targetTrack }));

@@ -21,10 +21,7 @@ export interface AlbumModel {
 export interface TrackModel {
   id: string;
   title: string;
-  shortTitle: string;
-  rank: number;
   duration: number;
-  explicitLyrics: boolean;
   album: AlbumModel;
   artist: ArtistModel;
 }

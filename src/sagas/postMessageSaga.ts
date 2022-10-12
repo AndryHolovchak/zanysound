@@ -151,7 +151,7 @@ function* handleGetPlaylistTracks(response: any) {
     yield put(changeLikedTracks(parsedTracks));
     yield put(changeLikedTracksIds(reversedTracks.map((e) => e.id)));
   } else {
-    yield put(changePlaylistsTracks({ ...playlistsTracks, [playlist.id]: parsedTracks }));
+    yield put(changePlaylistsTracks({ ...playlistsTracks, [playlist.id]: parsedTracks.reverse() }));
   }
 }
 
