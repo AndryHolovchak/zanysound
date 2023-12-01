@@ -9,8 +9,9 @@ import { retrieveMp3UrlAction } from "../../sagas/mp3Saga";
 import { selectMp3Urls, selectVideoIds } from "../../slices/mp3Slice";
 import { shuffle } from "../../utils/arrayUtils";
 import { isExpired } from "../../utils/trackUtils";
+import { PropsWithChildrenOnly } from "../../types/common";
 
-export const PlayerContextProvider: React.FC = ({ children }) => {
+export const PlayerContextProvider: React.FC<PropsWithChildrenOnly> = ({ children }) => {
   const dispatch = useAppDispatch();
 
   const mp3 = useAppSelector(selectMp3Urls);

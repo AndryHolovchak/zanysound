@@ -1,11 +1,11 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
 import { useAppDispatch } from "../../app/hooks";
 import { PlaylistModel } from "../../commonTypes/deezerTypes";
 import { deletePlaylistAction } from "../../sagas/contentSaga";
 import { EllipsisText } from "../EllipsisText/EllipsisText";
 import Icon from "../Icon/Icon";
 import styles from "./playlistPreview.module.sass";
+import { useNavigate } from "react-router-dom";
 
 export interface PlaylistPreviewProps {
   playlistModel: PlaylistModel;
@@ -13,10 +13,10 @@ export interface PlaylistPreviewProps {
 
 export const PlaylistPreview = ({ playlistModel }: PlaylistPreviewProps) => {
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleClick = () => {
-    history.push(`/playlist/${playlistModel.id}`);
+    navigate(`/playlist/${playlistModel.id}`);
   };
 
   const handleDeleteIconClick = (e: React.MouseEvent<HTMLElement>) => {

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import {  useParams,useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { EllipsisText } from "../../components/EllipsisText/EllipsisText";
 import Icon from "../../components/Icon/Icon";
@@ -10,11 +10,12 @@ import { selectPlaylists, selectPlaylistsTracks } from "../../slices/contentSlic
 import styles from "./PlaylistScreen.module.sass";
 
 export const PlaylistScreen = () => {
-  const { id } = useParams<any>();
+  const { id = '' } = useParams<any>();
   const dispatch = useAppDispatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const playlists = useAppSelector(selectPlaylists);
   const playlistsTracks = useAppSelector(selectPlaylistsTracks);
+
 
   useEffect(() => {
     dispatch(loadPlaylistTracksAction({ playlistId: id }));
@@ -27,7 +28,7 @@ export const PlaylistScreen = () => {
     return <></>;
   }
 
-  const handleBackIconClick = () => history.goBack();
+  const handleBackIconClick = () => navigate('../')
 
   return (
     <ScreenContainer>

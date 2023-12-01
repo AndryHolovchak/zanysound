@@ -1,11 +1,11 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import styles from "./Modal.module.sass";
 
 export interface ModalProps {
   onClose: () => void;
 }
 
-export const Modal: React.FC<ModalProps> = ({ onClose, children }) => {
+export const Modal: React.FC<PropsWithChildren<ModalProps>> = ({ onClose, children }) => {
   return (
     <div
       className={styles.modal}

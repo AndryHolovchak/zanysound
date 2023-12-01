@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "./App.sass";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Navigate,  Routes, Route } from "react-router-dom";
 import LikedScreen from "./screens/likedScreen/LikedScreen";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { changeIsMobileEnv, selectIsMobileEnv } from "./slices/appSlice";
@@ -68,14 +68,12 @@ function App() {
       <div className="App">
         <BrowserRouter>
           <NotificationHub />
-          <Switch>
-            <Route exact path="/cb">
-              <CallbackScreen />
+          <Routes>
+            <Route  path="/cb" element={ <CallbackScreen />}>
             </Route>
-            <Route path="*">
-              <WelcomeScreen />
+            <Route path="*" element={ <WelcomeScreen />}>
             </Route>
-          </Switch>
+          </Routes>
         </BrowserRouter>
       </div>
     );
@@ -86,27 +84,15 @@ function App() {
       <PlayerContextProvider>
         <BrowserRouter>
           <NotificationHub />
-          <Switch>
-            <Route exact path="/" render={() => <Redirect to="/liked" />} />
-            <Route exact path="/liked">
-              <LikedScreen />
-            </Route>
-            <Route exact path="/search">
-              <SearchScreen />
-            </Route>
-            <Route exact path="/collection">
-              <CollectionScreen />
-            </Route>
-            <Route exact path="/recommended">
-              <RecommendedScreen />
-            </Route>
-            <Route exact path="/profile">
-              <ProfileScreen />
-            </Route>
-            <Route exact path="/playlist/:id">
-              <PlaylistScreen />
-            </Route>
-          </Switch>
+          <Routes>
+            <Route  path="/" element={ <Navigate to="/liked" />}/>
+            <Route  path="/liked"  element={<LikedScreen />} />
+            <Route  path="/search" element={    <SearchScreen />} />
+            <Route  path="/collection" element={ <CollectionScreen />} />
+            <Route  path="/recommended" element={       <RecommendedScreen />} />
+            <Route  path="/profile" element={ <ProfileScreen />} />
+            <Route path="/playlist/:id" element={ <PlaylistScreen />} />
+          </Routes>
         </BrowserRouter>
       </PlayerContextProvider>
     </div>

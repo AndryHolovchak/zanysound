@@ -5,12 +5,13 @@ import MobileMenu from "../Menu/MobileMenu";
 import { Player } from "../Player/Player";
 
 import style from "./screenContainer.module.sass";
+import { WithChildren } from "../../types/common";
 
 export interface ScreenContainerProps {
   withMenu?: boolean;
 }
 
-const ScreenContainer: React.FC<ScreenContainerProps> = ({ children }) => {
+const ScreenContainer: React.FC<WithChildren<ScreenContainerProps>> = ({ children }) => {
   const playerContext = useContext(PlayerContext);
 
   const contentClassName = classNames([

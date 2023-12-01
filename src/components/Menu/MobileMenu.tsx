@@ -1,6 +1,6 @@
 import React from "react";
 import classNames from "classnames";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Routes } from "../../commonDefinitions/routeCommonDefinitions";
 
 import Icon from "../Icon/Icon";
@@ -26,7 +26,7 @@ interface MenuItemProps {
 
 const MenuItem: React.FC<MenuItemProps> = ({ path, icon }) => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const className = classNames([
     style.mobile_menu__item,
@@ -34,7 +34,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ path, icon }) => {
   ]);
 
   return (
-    <div className={className} onClick={() => history.push(path)}>
+    <div className={className} onClick={() => navigate(path)}>
       <Icon name={icon} className={style.mobile_menu__item_icon} />
     </div>
   );
